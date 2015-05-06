@@ -10,5 +10,8 @@ roohypy/core/main.py
 roohypy/models/__init__.py
 roohypy/models/gtmodel.py
 roohypy/tools/__init__.py
+roohypy/tools/plotlyplot.py
 roohypy/tools/plots.py
 roohypy/tools/sharedfunctions.py
+roohypy/tools/generators/__init__.py
+roohypy/tools/generators/er_generators.py

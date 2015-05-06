@@ -13,11 +13,17 @@ from roohypy.exceptions import *
 # Namespace roohypy.tools
 import roohypy.tools
 
-# Namespace roohypy.tools
+# Namespace roohypy.tools.generators
 import roohypy.tools.generators
+
+# Namespace roohypy.tools.hdf5
+import roohypy.tools.hdf5
 
 # Namespace roohypy.models
 import roohypy.models
+
+# Namespace roohypy.simulators
+import roohypy.simulators
 
 # Namespace roohypy.core
 import roohypy.core

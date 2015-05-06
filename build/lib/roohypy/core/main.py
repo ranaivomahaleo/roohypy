@@ -11,7 +11,8 @@
 
 # This library denoted mcag contains some functions that help on stats, graph,...
 
-import statsmodels.distributions.empirical_distribution as sm
+##
+# import statsmodels.distributions.empirical_distribution as sm
 import numpy as np
 import networkx as nx
 import json as json
@@ -319,7 +320,13 @@ def todirected(graph):
   
   
   
-  
+def getconnectedcomponents(dgraph):
+  """
+  """
+  n_scc = nx.number_strongly_connected_components(dgraph)
+  ugraph = dgraph.to_undirected()
+  n_cc = nx.number_connected_components(ugraph)
+  return n_scc, n_cc
   
   
 ####
@@ -1654,7 +1661,8 @@ def number_of_sink_nodes(dgraph):
   
   
 
-import xmlrpc.client as xml  
+#import xmlrpc.client as xml # Python 3
+import xmlrpclib as xml # Python 2
 def view_graph(dgraph):
   server = xml.Server('http://127.0.0.1:20738/RPC2')
   G = server.ubigraph

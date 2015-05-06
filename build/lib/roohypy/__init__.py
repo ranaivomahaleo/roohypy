@@ -6,9 +6,19 @@
 #    All rights reserved.
 #    BSD license.
 
+# Import all classes and functions inside exceptions.py
+# This function is under the namespace import roohypy
+from roohypy.exceptions import *
 
+# Namespace roohypy.tools
+import roohypy.tools
 
-import roohypy.tools.main
-import roohypy.models.gtmodel
-import roohypy.core.sharedfunctions
+# Namespace roohypy.tools
+import roohypy.tools.generators
+
+# Namespace roohypy.models
+import roohypy.models
+
+# Namespace roohypy.core
+import roohypy.core
 

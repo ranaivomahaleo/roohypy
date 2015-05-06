@@ -1,3 +1,2 @@
-from roohypy.models import *
 
-print('roohy.models init')
+from roohypy.models.gtmodel import *

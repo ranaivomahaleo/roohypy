@@ -1,4 +1,4 @@
-from roohypy.tools import *
 
-print('roohy.models init')
-
+from roohypy.tools.sharedfunctions import *
+from roohypy.tools.plots import *
+from roohypy.tools.plotlyplot import *

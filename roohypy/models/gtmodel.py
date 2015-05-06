@@ -8,12 +8,12 @@
 
 from __future__ import division
 
+import time
 import networkx as nx
 import numpy as np
 import numpy.linalg as la
 import roohypy.core as cr
 import roohypy.tools as tl
-import time
 import scipy.sparse as sparse
 import scipy.weave as weave
 
@@ -155,6 +155,19 @@ def getMainNetworkCharacteristics(A):
 
     return n, csc_A, elt_indices, elt_indices_tr, attributes
 
+
+def getNullArraysAndVectors(n):
+    """This function returns two arrays and four vectors
+    that are used as temporary storage for the optimized GT-Model dynamics.
+    """
+    zeros = np.zeros((n, n))
+    zeros1 = np.zeros((n, n))
+    zeros_vector = np.zeros((n,))
+    zeros_vector1 = np.zeros((n,))
+    zeros_vector2 = np.zeros((n,))
+    zeros_vector3 = np.zeros((n,))
+    return zeros, zeros1, zeros_vector, zeros_vector1, zeros_vector2, zeros_vector3
+    
 
 def GTModel(c, g, p, A, alpha, mu):
     """
