@@ -9,9 +9,13 @@ roohypy/core/__init__.py
 roohypy/core/main.py
 roohypy/models/__init__.py
 roohypy/models/gtmodel.py
+roohypy/simulators/__init__.py
+roohypy/simulators/gtsimulator.py
 roohypy/tools/__init__.py
 roohypy/tools/plotlyplot.py
 roohypy/tools/plots.py
 roohypy/tools/sharedfunctions.py
 roohypy/tools/generators/__init__.py
 roohypy/tools/generators/er_generators.py
+roohypy/tools/hdf5/__init__.py
+roohypy/tools/hdf5/hdf5tools.py

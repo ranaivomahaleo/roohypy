@@ -1,6 +1,6 @@
 Metadata-Version: 1.1
 Name: roohypy
-Version: 1.0.0.dev1
+Version: 1.0.0
 Summary: Python package for simulating the dynamics of agent on temporal multiplex networks
 Home-page: https://github.com/pypa/roohypy
 Author: Ranaivo Razakanirina

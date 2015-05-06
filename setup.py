@@ -25,7 +25,7 @@ setup(
     version='1.0.0',
     description='Python package for simulating the dynamics of agent on temporal multiplex networks',
     long_description=long_description,
-    url='https://github.com/pypa/roohypy',
+    url='https://github.com/ranaivomahaleo/roohypy',
     author='Ranaivo Razakanirina',
     author_email='ranaivo.razakanirina@atety.com',
     license='BSD',  # TODO
