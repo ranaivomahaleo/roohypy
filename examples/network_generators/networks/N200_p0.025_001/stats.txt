@@ -1,0 +1,5 @@
+Erdos random directed network
+n=200, p=0.025
+m=1041
+n_scc=3
+n_cc=1
