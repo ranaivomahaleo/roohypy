@@ -15,12 +15,14 @@ with open(path.join(here, 'DESCRIPTION.rst'), encoding='utf-8') as f:
 packages=["roohypy",
           "roohypy.core",
           "roohypy.models",
+          "roohypy.simulators",
           "roohypy.tools",
-          "roohypy.tools.generators"]
+          "roohypy.tools.generators",
+          "roohypy.tools.hdf5"]
 
 setup(
     name='roohypy',
-    version='1.0.0.dev1',
+    version='1.0.0',
     description='Python package for simulating the dynamics of agent on temporal multiplex networks',
     long_description=long_description,
     url='https://github.com/pypa/roohypy',
