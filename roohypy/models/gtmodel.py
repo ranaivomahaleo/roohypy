@@ -1,6 +1,5 @@
 # !/usr/bin/python
 # -*- coding=utf-8 -*-
-# Python 3
 
 #    Copyright (C) 2015 by
 #    Ranaivo Razakanirina <ranaivo.razakanirina@atety.com>
@@ -20,7 +19,41 @@ import scipy.weave as weave
 
 
 def getListOfAlphaMu(step_parameter_interval):
-    """
+    """alpha and mu are the parameters of GT-Model.
+    These parameters are between 0 and 1.
+    We use an integer representation such that the real 1 becomes 1000,
+    and the real 0.025 becomes 25.
+    
+    This function returns the ordered list of all possible combinations of 
+    values of alpha and mu. Each combination is referenced using an integer
+    index.
+    
+    Parameters
+    ----------
+    step_parameter_interval : int
+        The interval size.
+        step_parameter_interval = 25 means that we consider the following
+        values of alpha and mu:
+        0.025, 0.050, 0.075, 0.100, ... 0.975.
+        The integer representation becomes
+        25, 50, 75, 100, ..., 975
+    
+    Returns
+    -------
+     alphas_mus : numpy array
+        Ordered list of all possible combinations of tuple (alpha, mu).
+        Example: [(10, 10), (10, 20), (10, 30), ..., (990, 990)]
+     
+     alphas_mus_indices : numpy array
+        Ordered list of the corresponding indices of each (alpha, mu) tuple.
+     
+     alpha_mu_to_index : dict
+        Dict allowing the conversion of a tuple (alpha, mu) 
+        to its corresponding index.
+     
+     index_to_alpha_mu : dict
+        Dict allowing the conversion of an index to a tuple (alpha, mu).
+    
     """
     mus = range(step_parameter_interval, 1000, step_parameter_interval)
     alphas = range(step_parameter_interval, 1000, step_parameter_interval)
@@ -29,9 +62,22 @@ def getListOfAlphaMu(step_parameter_interval):
     
     
 def edgeNodeCsvToAdj(nodefilepath, edgefilepath):
-    """
-    Return the adjacency matrix in np.array format
-    corresponding to the nodefilepath and edgefilepath csv files.
+    """Return the numpy adjacency matrix A
+    corresponding to the nodes.csv and edge.csv files.
+    
+    Parameters
+    ----------
+    nodefilepath : string
+        Full path of nodes.csv file
+        
+    edgefilepath : string
+        Full path of edges.csv file
+        
+    Returns
+    ------
+    A : numpy array
+        The adjacency matrix A
+    
     """
     dgraph = nx.DiGraph()
     
@@ -48,11 +94,39 @@ def edgeNodeCsvToAdj(nodefilepath, edgefilepath):
     
     
 def getMainNetworkCharacteristics(A):
-    """
-    This function returns:
-    - n: 
-    - csc_A: The sparse CSC format representation of the adjacency matrix A
-    - 
+    """This function returns the characteristics of the directed network A
+    
+    Parameters
+    ----------
+    A : numpy 2D array
+        The adjacency matrix of the considered directed network.
+        
+    Returns
+    -------
+    n : integer
+        The order of the network A.
+        
+    csc_A : dict
+        CSC sparse matrix notation of the adjacency matrix A.
+        
+    elt_indices, elt_indices_tr : numpy array
+        These arrays contain the indices of the non-zero values of A
+        and the transpose of A.
+        
+    attributes : dict
+        Dict like attributes of the network A. The keys are:
+            n : Network order.
+            m : Network size.
+            p_rand : Corresponding connection probability.
+            directed : True (we always consider the case of directed graph
+            in GT-Model).
+            acyclic : True if A is directed acyclic graph and False if A 
+            is a directed cyclic graph.
+            n_scc : Number of strongly connected components.
+            n_cc : Number of connected components.
+            title, networkname, p, m0, m_links, beta, k, algorithms : Keys
+            that will be used when generating random graphs.
+
     """
     csc_A = sparse.csc_matrix(A)
     n = len(A)
@@ -71,7 +145,7 @@ def getMainNetworkCharacteristics(A):
     attributes['acyclic'] = nx.is_directed_acyclic_graph(dgraph)
     attributes['n_scc'], attributes['n_cc'] = cr.getconnectedcomponents(dgraph)    
     attributes['title'] = ''
-    attributes['networname'] = ''
+    attributes['networkname'] = ''
     attributes['p'] = 0
     attributes['m0'] = 0
     attributes['m_links'] = 0
@@ -157,10 +231,11 @@ def optimizedGTModel6(
         elt_indices, elt_indices_tr,
         zeros, zeros1, zeros_vector, zeros_vector1, zeros_vector2, zeros_vector3,
         cash, goods, price):
-    """
-    This function is the optimized version (v6) of the GT-Model dynamics.
-    The input are the cash, goods and price arrays with shape
-    (:, chunk_alpha_mu, 1) and the function returns in batch the time evolution
+    """This function is the optimized version (v6) of the GT-Model dynamics.
+    
+    The inputs are the cash, goods and price arrays with shape
+    (:, chunk_alpha_mu, 1)
+    This function returns in batch the time evolution
     of cash, goods and price.
     
     The results corresponding to this optimized GT Model v6 update function
