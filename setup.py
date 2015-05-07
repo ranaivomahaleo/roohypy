@@ -8,8 +8,8 @@ from os import path
 here = path.abspath(path.dirname(__file__))
 
 # Get the long description from the relevant file
-with open(path.join(here, 'DESCRIPTION.rst'), encoding='utf-8') as f:
-    long_description = f.read()
+# with open(path.join(here, 'DESCRIPTION.rst'), encoding='utf-8') as f:
+#    long_description = f.read()
     
 # List all the packages
 packages=["roohypy",
@@ -28,22 +28,23 @@ setup(
     url='https://github.com/ranaivomahaleo/roohypy',
     author='Ranaivo Razakanirina',
     author_email='ranaivo.razakanirina@atety.com',
-    license='BSD',  # TODO
+    license='BSD 3-clause',
+    install_requires=['networkx', 'numpy', 'bitshuffle', 'scipy', 'h5py'],
 
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers = [
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'Intended Audience :: Education',
         'Intended Audience :: Science/Research',
-        'License :: OSI Approved :: BSD License',  # TODO
+        'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python',
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Scientific/Engineering :: Information Analysis',
         'Topic :: Scientific/Engineering :: Mathematics',
         'Topic :: Scientific/Engineering :: Physics'],
     keywords=['Multiplex', 'Econophysics', 'discrete mathematics', 'discrete dynamical systems'],
-    packages=packages,
-
+    packages=packages
+    
 )
