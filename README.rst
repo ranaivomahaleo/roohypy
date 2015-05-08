@@ -27,6 +27,8 @@ This simulator requires the following Python packages:
 To install the simulator, use the standard setup.py script to install 
 a python package:
 
+::
+
     python setup.py install
 
 Simulator
@@ -128,11 +130,19 @@ The GT-Model simulation code is:
     # network and attributes parameters.
     sim.LaunchGTSimulation(simulation, network, attributes=attributes)
 
-Structure of the resulting datasets
+Structure of the GT-Model of the resulting dataset
 :::::::::::::::::::::::::::::::::::
 
 The filename of the resulting dataset is :code:`dataset.h5` which is stored
 inside the folder :code:`resultfolder + networkname + _s'alpha_mu_interval' + _i'epochs'`.
 
+The resulting dataset consists of three subsets.
+The first one for assets with :code:`cash` key,
+the second one for commodities with :code:`goods` key
+and the last one for prices with :code:`price` key.
 
+Each subset has the shape :code:`(n_agents, alpha_mu, epochs)` as
+depicted in the following figure:
+
+.. image:: docs/images/gtdataset.png
 
