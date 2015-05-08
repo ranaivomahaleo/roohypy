@@ -13,15 +13,15 @@ Installation
 
 This simulator requires the following Python packages:
 
-    - NetworkX libraries
+* NetworkX libraries
 
-    - numpy libraries for arrays manipulation
+* numpy libraries for arrays manipulation
 
-    - scipy.weave for C codes that accelerate the treatment of 
-    large sparse arrays
+* scipy.weave for C codes that accelerate the treatment of 
+large sparse arrays
 
-    - bitshuffle and h5py packages for lossless compression algorithm 
-    for hdf5 datasets that contain the results of the simulations.
+* bitshuffle and h5py packages for lossless compression algorithm 
+for hdf5 datasets that contain the results of the simulations.
 
 To install the simulator, use the standard setup.py script to install a python package:
 
