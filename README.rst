@@ -43,7 +43,7 @@ The GT-Model simulator is furnished within the package.
 It models the interactions between homogeneous traders that exchange assets
 against commodities.
 
-1. RM Razakanirina, B Chopard, "Dynamics of Artificial Markets on Irregular Topologies", Proceedings of the European Conference on Complex Systems 2012, Springer, 1019-1031, 2013 [DOI1_]
+1. R.M. Razakanirina, B Chopard, "Dynamics of Artificial Markets on Irregular Topologies", Proceedings of the European Conference on Complex Systems 2012, Springer, 1019-1031, 2013 [DOI1_]
 
 .. _DOI1: http://dx.doi.org/10.1007/978-3-319-00395-5_123
 
