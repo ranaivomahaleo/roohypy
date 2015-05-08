@@ -164,6 +164,7 @@ Notice that bitshuffle should imported with :code:`from bitshuffle import h5`
 even not used within the code.
 
 ::
+
     # Code available at: 
     # roohypy/examples/gtsimulations/get_gt_data_from_dataset.py
     
