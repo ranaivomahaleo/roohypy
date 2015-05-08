@@ -35,10 +35,10 @@ Simulator
 The simulator takes as input the parameters of the network and simulations
 and stores the simulation results in a HDF5 compressed file.
 
-GT-Model simulator
+GT-Model (Give and Take Model) simulator
 ``````````````````
 The GT-Model simulator is furnished within the package.
-It models the interactions between homogeneous agents that exchange assets
+It models the interactions between homogeneous traders that exchange assets
 against commodities.
 
 # Add publications...
@@ -53,6 +53,8 @@ The following code simulates a GT-Model with the following parameters:
   from [200, 1000[ with the step interval 200 (200, 400, 600, 800).
   1000 is excluded.
 * :code:`resultfolder` defines where the results will be stored: './results/'
+* The parameters :code:`c0`, :code:`g0` and :code:`p0` are the homogeneous
+  initial conditions of each trader.
 
 ::
 
