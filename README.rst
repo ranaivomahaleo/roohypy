@@ -1,5 +1,4 @@
 
-.. role:: raw-math(raw)
 
 RoohyPy
 =======
@@ -49,7 +48,7 @@ Sample code
 The following code simulates a GT-Model with the following parameters:
 
 * Number of epochs: 100 iterations
-* With :code:`alpha_mu_interval=200`, The parameters :raw-math:`$\alpha$'
+* With :code:`alpha_mu_interval=200`, The parameters :math:`$\alpha$`
 * Folder where the results will be stored: './results/'
 
 ::
