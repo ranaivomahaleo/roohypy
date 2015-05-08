@@ -18,12 +18,13 @@ This simulator requires the following Python packages:
 * numpy libraries for arrays manipulation
 
 * scipy.weave for C codes that accelerate the treatment of 
-large sparse arrays
+  large sparse arrays
 
 * bitshuffle and h5py packages for lossless compression algorithm 
-for hdf5 datasets that contain the results of the simulations.
+  for hdf5 datasets that contain the results of the simulations.
 
-To install the simulator, use the standard setup.py script to install a python package:
+To install the simulator, use the standard setup.py script to install 
+a python package:
 
     python setup.py install
 
