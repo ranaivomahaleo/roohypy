@@ -47,7 +47,9 @@ against commodities.
 
 .. _DOI: http://dx.doi.org/10.1007/978-3-319-00395-5_123
 
-2. R.M. Razakanirina, B. Chopard, "Using Cellular Automata on a Graph to Model the Exchanges of Cash and Goods", ACRI 2010, vol. 6350/2010, Ascoli Piceno, Springer, pp. 163-172, 21/09/2010.
+2. R.M. Razakanirina, B. Chopard, "Using Cellular Automata on a Graph to Model the Exchanges of Cash and Goods", ACRI 2010, vol. 6350/2010, Ascoli Piceno, Springer, pp. 163-172, 21/09/2010. [DOI_]
+
+.. _DOI: http://dx.doi.org/10.1007/978-3-642-15979-4_18
 
 Sample Python code
 :::::::::::
