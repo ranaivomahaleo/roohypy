@@ -52,7 +52,7 @@ The following code simulates a GT-Model with the following parameters:
   and :code:`mu` varies
   from [200, 1000[ with the step interval 200 (200, 400, 600, 800).
   1000 is excluded.
-* Folder where the results will be stored: './results/'
+* :code:`resultfolder` defines where the results will be stored: './results/'
 
 ::
 
