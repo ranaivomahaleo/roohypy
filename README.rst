@@ -40,7 +40,8 @@ The GT-Model simulator is furnished within the package.
 It models the interactions between homogeneous agents that exchange assets
 against commodities.
 
-::
+Sample code
+:::::::::::
 
     import roohypy.simulators as sim
 
