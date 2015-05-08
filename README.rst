@@ -45,7 +45,8 @@ against commodities.
 
 Sample code
 :::::::::::
-The following code simulates a GT-Model with the following parameters:
+The code below simulates a GT-Model with the following 
+simulation parameters:
 
 * Number of epochs: 100 iterations
 * With :code:`alpha_mu_interval=200`, each parameters :code:`alpha` 
@@ -60,10 +61,35 @@ The following code simulates a GT-Model with the following parameters:
   values.
 * For better compression, the real values are stored using unsigned integer
   in 32 bits (:code:`numpy.uint32`).
-  The :code:`integer_sensitivity` defines the number of significant digit
+  The :code:`integer_sensitivity` defines the number of significant digits
   after the decimal point that will be stored in the resulting dataset.
   For instance, with :code:`integer_sensitivity=10000`, the four digits
   after the decimal point are stored in the resulting dataset.
+  
+The network parameters are:
+
+* :code:`networkfolder` which is the root folder where the network is stored
+  in file system.
+* :code:`networkname` which is the name of the simulated network.
+  This name should correspond exactly to the folder inside
+  the :code:`networkfolder`.
+  This folder contains two files: nodes.csv and edges.csv files.
+  
+  The structure of nodes.csv file is as follows:
+  ::
+  Nodes Id Label
+    0 0 0
+    1 1 1
+    2 2 2
+  
+  The structure of edges.csv file is as follows:
+  ::
+  Id Source Target
+    0 0 2
+    1 0 10
+    2 0 15
+    3 0 17
+    4 0 24
 
 ::
 
