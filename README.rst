@@ -40,8 +40,17 @@ The GT-Model simulator is furnished within the package.
 It models the interactions between homogeneous agents that exchange assets
 against commodities.
 
+# Add publications...
+
 Sample code
 :::::::::::
+The following code simulates a GT-Model with the following parameters:
+
+* Number of epochs: 100
+* The interval be :math:`\alpha`
+* Folder where the results will be stored: './results/'
+
+::
 
     import roohypy.simulators as sim
 
@@ -71,3 +80,6 @@ Sample code
     # Launch a GT simulation corresponding to the above simulation
     # network and attributes parameters.
     sim.LaunchGTSimulation(simulation, network, attributes=attributes)
+
+Structure of the resulting datasets
+:::::::::::::::::::::::::::::::::::
