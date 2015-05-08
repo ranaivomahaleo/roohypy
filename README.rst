@@ -84,7 +84,7 @@ The structure of nodes.csv file is as follows:
     1 1 1
     2 2 2
   
-  The structure of edges.csv file is as follows:
+The structure of edges.csv file is as follows:
   
 ::
   
