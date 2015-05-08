@@ -103,6 +103,9 @@ The GT-Model simulation code is:
 
 ::
 
+    # Code available at
+    # roohypy/examples/gtsimulations/simulate_gt_model.py
+
     import roohypy.simulators as sim
 
     # Simulation parameters
@@ -161,7 +164,9 @@ Notice that bitshuffle should imported with :code:`from bitshuffle import h5`
 even not used within the code.
 
 ::
-
+    # Code available at: 
+    # roohypy/examples/gtsimulations/get_gt_data_from_dataset.py
+    
     import h5py as hdf
     from bitshuffle import h5 # bishuffle is mandatory for data decompression
     import roohypy.tools as tl
@@ -189,7 +194,9 @@ even not used within the code.
 
     print(assets)
 
-The above code returns the following results:
+The above code returns the following results
+(the hdf5 dataset is available at
+:code:`roohypy/examples/gtsimulations/results/N200_p0.2_001_s20_i100`):
 
 ::
 
