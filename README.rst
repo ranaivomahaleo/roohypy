@@ -43,7 +43,9 @@ The GT-Model simulator is furnished within the package.
 It models the interactions between homogeneous traders that exchange assets
 against commodities.
 
-# Add publications...
+1. RM Razakanirina, B Chopard, "Dynamics of Artificial Markets on Irregular Topologies", Proceedings of the European Conference on Complex Systems 2012, Springer, 1019-1031, 2013
+
+2. R.M. Razakanirina, B. Chopard, "Using Cellular Automata on a Graph to Model the Exchanges of Cash and Goods", ACRI 2010, vol. 6350/2010, Ascoli Piceno, Springer, pp. 163-172, 21/09/2010.
 
 Sample Python code
 :::::::::::
@@ -186,4 +188,19 @@ even not used within the code.
     assets = f['cash'][0:5, index_alpha_mu, 0:10]
 
     print(assets)
+
+The above code returns the following results:
+
+::
+
+    [[3000000 3178571 3090723 3200478 3156122 3222049 3203390 3241726 3237767
+      3258931]
+     [3000000 2820206 2928460 2800962 2877071 2783782 2839352 2769273 2811228
+      2757431]
+     [3000000 2669882 2883294 2614275 2794136 2574776 2726787 2546319 2676086
+      2525700]
+     [3000000 2839987 2951648 2836415 2918972 2829145 2895864 2821253 2878839
+      2814014]
+     [3000000 2819879 2947230 2768617 2904739 2739132 2872177 2722643 2847804
+      2714066]]
 
