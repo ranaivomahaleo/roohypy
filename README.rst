@@ -58,6 +58,12 @@ The following code simulates a GT-Model with the following parameters:
 * :code:`alpha_mu_chunk_size` and :code:`epochs_chunk_size` defines the chunk
   shape of the resulting dataset. The recommended setting is 100 for both
   values.
+* For better compression, the real values are stored using unsigned integer
+  in 32 bits (:code:`numpy.uint32`).
+  The :code:`integer_sensitivity` defines the number of significant digit
+  after the decimal point that will be stored in the resulting dataset.
+  For instance, with :code:`integer_sensitivity=10000`, the four digits
+  after the decimal point are stored in the resulting dataset.
 
 ::
 
