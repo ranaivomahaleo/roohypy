@@ -43,7 +43,9 @@ The GT-Model simulator is furnished within the package.
 It models the interactions between homogeneous traders that exchange assets
 against commodities.
 
-1. RM Razakanirina, B Chopard, "Dynamics of Artificial Markets on Irregular Topologies", Proceedings of the European Conference on Complex Systems 2012, Springer, 1019-1031, 2013
+1. RM Razakanirina, B Chopard, "Dynamics of Artificial Markets on Irregular Topologies", Proceedings of the European Conference on Complex Systems 2012, Springer, 1019-1031, 2013 [DOI_]
+
+.. _DOI: http://dx.doi.org/10.1007/978-3-319-00395-5_123
 
 2. R.M. Razakanirina, B. Chopard, "Using Cellular Automata on a Graph to Model the Exchanges of Cash and Goods", ACRI 2010, vol. 6350/2010, Ascoli Piceno, Springer, pp. 163-172, 21/09/2010.
 
