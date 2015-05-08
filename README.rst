@@ -130,3 +130,9 @@ The GT-Model simulation code is:
 
 Structure of the resulting datasets
 :::::::::::::::::::::::::::::::::::
+
+The filename of the resulting dataset is :code:`dataset.h5` which is stored
+inside :code:`resultfolder + networkname + _s'alpha_mu_interval' + _i'epochs'`.
+
+
+
