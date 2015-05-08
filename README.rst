@@ -130,11 +130,15 @@ The GT-Model simulation code is:
     # network and attributes parameters.
     sim.LaunchGTSimulation(simulation, network, attributes=attributes)
 
-Structure of the GT-Model of the resulting dataset
+Structure of the resulting dataset of GT-Model
 :::::::::::::::::::::::::::::::::::
 
-The filename of the resulting dataset is :code:`dataset.h5` which is stored
-inside the folder :code:`resultfolder + networkname + _s'alpha_mu_interval' + _i'epochs'`.
+The filename of the resulting dataset is :code:`dataset.h5`.
+This file is stored inside the folder 
+
+::
+
+    resultfolder + networkname + _s'alpha_mu_interval' + _i'epochs'
 
 The resulting dataset consists of three subsets.
 The first one for assets with :code:`cash` key,
