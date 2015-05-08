@@ -48,7 +48,9 @@ Sample code
 The following code simulates a GT-Model with the following parameters:
 
 * Number of epochs: 100 iterations
-* With :code:`alpha_mu_interval=200`, The parameters :math:`$\alpha$`
+* With :code:`alpha_mu_interval=200`, the parameters :code:`alpha` varies
+  from [200, 1000[ with the step interval 200 (200, 400, 600, 800).
+  1000 is excluded.
 * Folder where the results will be stored: './results/'
 
 ::
