@@ -95,6 +95,8 @@ The structure of edges.csv file is as follows:
     3 0 17
     4 0 24
 
+The GT-Model simulation code is:
+
 ::
 
     import roohypy.simulators as sim
