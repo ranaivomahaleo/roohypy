@@ -55,6 +55,9 @@ The following code simulates a GT-Model with the following parameters:
 * :code:`resultfolder` defines where the results will be stored: './results/'
 * The parameters :code:`c0`, :code:`g0` and :code:`p0` are the homogeneous
   initial conditions of each trader.
+* :code:`alpha_mu_chunk_size` and :code:`epochs_chunk_size` defines the chunk
+  shape of the resulting dataset. The recommended setting is 100 for both
+  values.
 
 ::
 
