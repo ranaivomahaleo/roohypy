@@ -28,4 +28,14 @@ a python package:
 
     python setup.py install
 
+Simulator
+---------
 
+The simulator takes as input the parameters of the network and simulations
+and stores the simulation results in a HDF5 compressed file.
+
+GT-Model simulator
+``````````````````
+The GT-Model simulator is furnished within the package.
+It models the interactions between homogeneous agents that exchange assets
+against commodities.
