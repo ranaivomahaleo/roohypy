@@ -76,14 +76,18 @@ The network parameters are:
   This folder contains two files: nodes.csv and edges.csv files.
   
   The structure of nodes.csv file is as follows:
+  
   ::
+  
   Nodes Id Label
     0 0 0
     1 1 1
     2 2 2
   
   The structure of edges.csv file is as follows:
+  
   ::
+  
   Id Source Target
     0 0 2
     1 0 10
