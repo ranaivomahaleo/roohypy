@@ -34,5 +34,5 @@ attributes['algorithm'] = 'ER'
 
 # Launch a GT simulation corresponding to the above simulation
 # network and attributes parameters.
-sim.LaunchGTSimulation(simulation, network, attributes=attributes)
+sim.LaunchGTSimulation(simulation, network, attributes=attributes, simulation_index=0)
 

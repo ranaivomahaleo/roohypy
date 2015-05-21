@@ -117,6 +117,7 @@ The GT-Model simulation code is:
     simulation['epochs'] = 100
     simulation['alpha_mu_interval'] = 200
     simulation['resultfolder'] = './results/' # With trailing slash
+    simulation['rand_ic'] = False
     simulation['c0'] = 300
     simulation['g0'] = 40
     simulation['p0'] = 10
@@ -137,17 +138,17 @@ The GT-Model simulation code is:
 
     # Launch a GT simulation corresponding to the above simulation
     # network and attributes parameters.
-    sim.LaunchGTSimulation(simulation, network, attributes=attributes)
+    sim.LaunchGTSimulation(simulation, network, attributes=attributes, simulation_index=0)
 
 Structure of the resulting dataset of GT-Model
 :::::::::::::::::::::::::::::::::::
 
-The filename of the resulting dataset is :code:`dataset.h5`.
+The filename of the resulting dataset is :code:`dataset_'+simulation_index+'.h5`.
 This file is stored inside the folder 
 
 ::
 
-    resultfolder + networkname + _s'alpha_mu_interval' + _i'epochs'
+    resultfolder + networkname + _s'alpha_mu_interval' + _is'integer_sensitivity' + _i'epochs'
 
 The resulting dataset consists of three subsets.
 The first one for assets with :code:`cash` key,
