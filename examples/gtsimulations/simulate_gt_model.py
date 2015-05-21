@@ -13,6 +13,7 @@ simulation = {}
 simulation['epochs'] = 100
 simulation['alpha_mu_interval'] = 200
 simulation['resultfolder'] = './results/' # With trailing slash
+simulation['rand_ic'] = False
 simulation['c0'] = 300
 simulation['g0'] = 40
 simulation['p0'] = 10
