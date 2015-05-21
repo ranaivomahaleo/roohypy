@@ -104,17 +104,20 @@ def getDefaultPlotlyColorbar(colorbartickfont=28):
     
 def getDefaultPlotlyParameterBasinLayout(xtitle='', ytitle='',
         xautorange=False, yautorange=False,
-        xrange=[0,1], yrange=[0,1]):
+        xrange=[0,1], yrange=[0,1],
+        tickfontsize=23,
+        r=10, b=80, t=10, l=140
+    ):
     """
     """
     layout = Layout(
         width=1033,
         height=897,
         margin=Margin(
-            r=80,
-            b=80,
-            t=10,
-            l=100
+            r=r,
+            b=b,
+            t=t,
+            l=l
         ),
         xaxis=XAxis(
             title = xtitle,
@@ -133,7 +136,7 @@ def getDefaultPlotlyParameterBasinLayout(xtitle='', ytitle='',
             ),
             tickfont = Font(
                 family='Open sans',
-                size = 23
+                size = tickfontsize
             ),
         ),
         yaxis=YAxis(
@@ -153,7 +156,7 @@ def getDefaultPlotlyParameterBasinLayout(xtitle='', ytitle='',
             ),
             tickfont = Font(
                 family='Open sans',
-                size = 23
+                size = tickfontsize
             ),
         ),
         legend=Legend(
@@ -171,17 +174,19 @@ def getDefaultPlotlyParameterBasinLayout(xtitle='', ytitle='',
 
 def getDefaultPlotlyEvolutionLayout(xtitle='', ytitle='',
         xautorange=False, yautorange=False,
-        xrange=[0,1], yrange=[0,1]):
+        xrange=[0,1], yrange=[0,1],
+        tickfontsize=23,
+        r=10, b=80, t=10, l=140):
     """
     """
     layout = Layout(
         width=1000,
         height=618,
         margin=Margin(
-            r=10,
-            b=80,
-            t=10,
-            l=140
+            r=r,
+            b=b,
+            t=t,
+            l=l
         ),
         xaxis=XAxis(
             title = xtitle,
@@ -194,13 +199,14 @@ def getDefaultPlotlyEvolutionLayout(xtitle='', ytitle='',
             mirror='ticks',
             autorange=xautorange,
             range=xrange,
+            exponentformat="none",
             titlefont = Font(
                 family='Open sans',
                 size = 40
             ),
             tickfont = Font(
                 family='Open sans',
-                size = 23
+                size = tickfontsize
             ),
         ),
         yaxis=YAxis(
@@ -214,13 +220,14 @@ def getDefaultPlotlyEvolutionLayout(xtitle='', ytitle='',
             mirror='ticks',
             autorange=yautorange,
             range=yrange,
+            exponentformat="none",
             titlefont = Font(
                 family='Open sans',
                 size = 40
             ),
             tickfont = Font(
                 family='Open sans',
-                size = 23
+                size = tickfontsize
             ),
         ),
         legend=Legend(

@@ -196,17 +196,51 @@ def edgeNodeCsvToAdj(nodefilepath, edgefilepath):
 
 def getHomogeneousInitialConditions(cini, gini, pini, n):
     """
+    Return homogeneous initial conditions
     """
     p_ic = pini * np.ones(n)
     c_ic = cini * np.ones(n)
     g_ic = gini * np.ones(n)
     return c_ic, g_ic, p_ic
+    
+    
+def getRandomUniformIC(
+        c_tot=900,
+        g_tot=120,
+        p_min=0.075,
+        p_max=742.5,
+        c_min_lim=10,
+        g_min_lim=10,
+        n=3
+    ):
+    """
+    Return random uniform initial conditions.
+    """
+    c_min = (c_min_lim * (n - 1) * c_tot) / (1 + c_min_lim * (n - 1))
+    c_max = c_tot - c_min
+    g_min = (g_min_lim * (n - 1) * g_tot) / (1 + g_min_lim * (n - 1))
+    g_max = g_tot - g_min
+    
+    X = np.random.uniform(low=c_min, high=c_max, size=n)
+    c_ic = np.divide(X.astype(float), sum(X))
+    c_ic = np.dot(c_ic, c_tot)
+    
+    Y = np.random.uniform(low=g_min, high=g_max, size=n)
+    g_ic = np.divide(Y.astype(float), sum(Y))
+    g_ic = np.dot(g_ic, g_tot)
+    
+    p_ic = np.random.uniform(low=p_min, high=p_max, size=n)
+    
+    return c_ic, g_ic, p_ic
 
 
-def getResultFolderName(networkname='networkname', step=10, epochs=100):
+def getResultFolderName(networkname='networkname',
+                        step=10,
+                        epochs=100,
+                        integer_sensitivity=1):
     """
     """
-    return networkname + '_' + 's' + str(step) + '_i' + str(epochs)
+    return networkname + '_' + 's' + str(step) + '_is' + str(integer_sensitivity) + '_i' + str(epochs)
 
 
 def c_rowsum(o, input, indices):

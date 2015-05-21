@@ -57,6 +57,8 @@ def getGTBifurcationFromGTHdf5(hdf5GTdataset,
         networkname = hdf5GTdataset.attrs['networkname']
     else:
         networkname = hdf5GTdataset.attrs['networname']
+        
+    integer_sensitivity = hdf5GTdataset.attrs['integer_sensitivity']
 
     title = {'cash': 'c_', 'goods': 'g_', 'price': 'p_'}
     ytitle = '$' + title[type] +'{'+ str(agent_id)+'}'+'$'
@@ -74,8 +76,8 @@ def getGTBifurcationFromGTHdf5(hdf5GTdataset,
         index_list = list(map(lambda y: rp.tools.getIndexOf2DNpArray(alphas_mus, alpha, y), X))
         xtitle = '$\\mu$'
         fixedlegend = '$\\alpha=' + str(fixed/1000) + '$'
-    data = hdf5GTdataset[type][-last_epochs:, index_list, agent_id]
-    data = np.transpose(data)
+    data = hdf5GTdataset[type][agent_id, index_list, -last_epochs:]
+    data = np.dot(data, 1/integer_sensitivity)   
 
     datax = np.repeat(X, last_epochs)
     datay = np.reshape(data, (data.shape[0] * data.shape[1],))

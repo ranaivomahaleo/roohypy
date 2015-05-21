@@ -22,9 +22,9 @@ packages=["roohypy",
 
 setup(
     name='roohypy',
-    version='1.0.0',
+    version='1.0.1',
     description='Python package for simulating the dynamics of agent on temporal multiplex networks',
-    long_description=long_description,
+    long_description='',
     url='https://github.com/ranaivomahaleo/roohypy',
     author='Ranaivo Razakanirina',
     author_email='ranaivo.razakanirina@atety.com',
