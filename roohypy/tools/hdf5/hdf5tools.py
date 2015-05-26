@@ -26,6 +26,7 @@ def createGTHdf5File(datasetfullpath,
         agents_id_list=[0, 1, 2],
         attributes={'title': ''},
         simulation={'simulationtitle': ''},
+        network={'networkfolder': ''},
         chunksize=(100, 100, 100)):
     """This function inits and create an hdf5 file
     that have the following shape:
@@ -48,6 +49,9 @@ def createGTHdf5File(datasetfullpath,
         
     for simulation_item in simulation:
         f.attrs[simulation_item] = simulation[simulation_item]
+        
+    for network_item in network:
+        f.attrs[network_item] = network[network_item]
     
     f.create_dataset('t', data=range(0, epochs, 1))
     f.create_dataset('alphas_mus', data=ordered_tuple_alpha_mu)

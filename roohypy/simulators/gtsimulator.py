@@ -92,7 +92,8 @@ def InitGTSimulation(simulation, network, attributes={}, simulation_index=0):
         ordered_tuple_alpha_mu=alphas_mus,
         agents_id_list=range(0, n, 1),
         attributes=attributes,
-        simulation=simulation
+        simulation=simulation,
+        network=network
     )
     
     iterate = {}

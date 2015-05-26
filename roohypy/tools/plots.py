@@ -22,6 +22,10 @@ def getGTParameterBassinFromGTTransposedHdf5(hdf5GTdataset,
     "Transposed" means that the shape of the hdf5 file
     is (agent_ids, alpha_mu, epochs)
     """
+    last_epochs = int(last_epochs)
+    agent_id = int(agent_id)
+    
+    
     # Manage networname name for some data sets
     if 'networkname' in hdf5GTdataset.attrs:
         networkname = hdf5GTdataset.attrs['networkname']
@@ -52,6 +56,10 @@ def getGTBifurcationFromGTHdf5(hdf5GTdataset,
     """
     This function get bifurcation datas (x and y)
     """
+    last_epochs = int(last_epochs)
+    agent_id = int(agent_id)
+    fixed = int(fixed)
+    
     # Manage networname name for some data sets
     if 'networkname' in hdf5GTdataset.attrs:
         networkname = hdf5GTdataset.attrs['networkname']
@@ -67,13 +75,13 @@ def getGTBifurcationFromGTHdf5(hdf5GTdataset,
     if xaxis=='alpha':
         mu = fixed
         X = np.unique(alphas_mus[:,0])
-        index_list = list(map(lambda y: rp.tools.getIndexOf2DNpArray(alphas_mus, y, mu), X))
+        index_list = list(map(lambda y: rp.tools.getIndexOf2DNpArray(alphas_mus, int(y), mu), X))
         xtitle = '$\\alpha$'
         fixedlegend = '$\\mu=' + str(fixed/1000) + '$'
     if xaxis=='mu':
         alpha = fixed
         X = np.unique(alphas_mus[:,1])
-        index_list = list(map(lambda y: rp.tools.getIndexOf2DNpArray(alphas_mus, alpha, y), X))
+        index_list = list(map(lambda y: rp.tools.getIndexOf2DNpArray(alphas_mus, alpha, int(y)), X))
         xtitle = '$\\mu$'
         fixedlegend = '$\\alpha=' + str(fixed/1000) + '$'
     data = hdf5GTdataset[type][agent_id, index_list, -last_epochs:]
@@ -96,6 +104,9 @@ def getGTTimeEvolutionFromGTTransposedHdf5(hdf5GTdataset,
     "Transposed" means that the shape of the hdf5 file
     is (agent_ids, alpha_mu, epochs)
     """
+    alpha = int(alpha)
+    mu = int(mu)
+    
     # Manage networname name for some data sets
     if 'networkname' in hdf5GTdataset.attrs:
         networkname = hdf5GTdataset.attrs['networkname']
@@ -106,7 +117,7 @@ def getGTTimeEvolutionFromGTTransposedHdf5(hdf5GTdataset,
     
     datax = np.array(hdf5GTdataset[type].dims[2][0])
     alphas_mus = np.array(hdf5GTdataset[type].dims[1][0])
-    am_index = rp.tools.getIndexOf2DNpArray(alphas_mus, alpha, mu)
+    am_index = rp.tools.getIndexOf2DNpArray(alphas_mus, int(alpha), int(mu))
     if agent_ids == 'all':
         agent_labels = np.array(hdf5GTdataset[type].dims[0][0])
         datay = hdf5GTdataset[type][:, am_index, :]
@@ -118,3 +129,47 @@ def getGTTimeEvolutionFromGTTransposedHdf5(hdf5GTdataset,
     max_y = np.max(datay)
     
     return datax, zip(agent_labels, np.transpose(datay)), networkname, max_y
+    
+    
+def getGTAgentsStates(hdf5GTdataset,
+                        type='cash',
+                        alpha=100,
+                        mu=100,
+                        t=0):
+    """
+    Get the state of all agents at a particular time t
+    """
+    alpha = int(alpha)
+    mu = int(mu)
+    t = int(t)
+    
+    integer_sensitivity = hdf5GTdataset.attrs['integer_sensitivity']
+    
+    alphas_mus = np.array(hdf5GTdataset[type].dims[1][0])
+    am_index = rp.tools.getIndexOf2DNpArray(alphas_mus, int(alpha), int(mu))
+    
+    data = hdf5GTdataset[type][:, am_index, t]
+    data = np.dot(data, 1/integer_sensitivity)
+    return data
+
+
+def getGTTemporalEvolutionAgentState(hdf5GTdataset,
+                        type='cash',
+                        agent_id=0,
+                        alpha=100,
+                        mu=100):
+    """
+    This function returns the time evolution of a state of a particular agent.
+    """
+    agent_id = int(agent_id)
+    alpha = int(alpha)
+    mu = int(mu)
+    
+    integer_sensitivity = hdf5GTdataset.attrs['integer_sensitivity']
+    alphas_mus = np.array(hdf5GTdataset[type].dims[1][0])
+    am_index = rp.tools.getIndexOf2DNpArray(alphas_mus, alpha, mu)
+
+    state_evolution = hdf5GTdataset[type][agent_id, am_index, :]
+    state_evolution = np.dot(state_evolution, 1/integer_sensitivity)
+    
+    return state_evolution

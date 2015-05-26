@@ -108,7 +108,7 @@ def createERNetworks(folder, networkname, n=200, p=0.01):
     statinfo += 'n_scc='+str(n_scc)+'\n'
     statinfo += 'n_cc='+str(n_cc)+'\n'
     
-    nodefilepath, edgefilepath, statspathtl.generators.saveDigraphToFile(
+    nodefilepath, edgefilepath, statspath = tl.generators.saveDigraphToFile(
         dgraph, folder, networkname, statinfo=statinfo)
     
     return nodefilepath, edgefilepath, statspath

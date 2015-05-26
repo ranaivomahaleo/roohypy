@@ -94,6 +94,7 @@ def getIndexOf2DNpArray(array2D, x, y):
     for index, value in enumerate(array2D):
         if np.array_equal(value, np.array([x, y])):
             return index
+    print('Error in tl.getIndexOf2DNpArray: Index does not exist')
     return -1
 
 
@@ -192,6 +193,21 @@ def edgeNodeCsvToAdj(nodefilepath, edgefilepath):
     A = nx.to_numpy_matrix(dgraph, dtype=np.uint32)
     A = np.array(A)
     return A
+    
+    
+def getKINList(nodefilepath, edgefilepath):
+    """
+    Return the in_degree of each node of a directed graph.
+    """
+    dgraph = nx.DiGraph()
+    
+    nodes = np.genfromtxt(nodefilepath, skip_header=1, dtype=np.uint32)
+    edges = np.genfromtxt(edgefilepath, skip_header=1, dtype=np.uint32)
+    
+    dgraph.add_nodes_from(nodes[:, 1])
+    dgraph.add_edges_from(edges[:, 1:])
+    
+    return list(dgraph.in_degree(dgraph.nodes()).values())
 
 
 def getHomogeneousInitialConditions(cini, gini, pini, n):

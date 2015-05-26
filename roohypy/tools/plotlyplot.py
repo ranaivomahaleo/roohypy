@@ -10,17 +10,21 @@ from plotly.graph_objs import *
 
 def getDefaultPlotlyLayout(xtitle='', ytitle='',
         xautorange=False, yautorange=False,
-        xrange=[0,1], yrange=[0,1]):
+        xrange=[0,1], yrange=[0,1],
+        tickfontsize=23,
+        r=10, b=80, t=10, l=140,
+        xlegend=0.8, ylegend=0.9, legendsize=18
+        ):
     """
     """
     layout = Layout(
         width=1000,
         height=618,
         margin=Margin(
-            r=10,
-            b=80,
-            t=10,
-            l=140
+            r=r,
+            b=b,
+            t=t,
+            l=l
         ),
         xaxis=XAxis(
             title = xtitle,
@@ -39,7 +43,7 @@ def getDefaultPlotlyLayout(xtitle='', ytitle='',
             ),
             tickfont = Font(
                 family='Open sans',
-                size = 23
+                size = tickfontsize
             ),
         ),
         yaxis=YAxis(
@@ -59,15 +63,15 @@ def getDefaultPlotlyLayout(xtitle='', ytitle='',
             ),
             tickfont = Font(
                 family='Open sans',
-                size = 23
+                size = tickfontsize
             ),
         ),
         legend=Legend(
-            x=0.8,
-            y=0.9,
+            x=xlegend,
+            y=ylegend,
             font = Font(
                 family='Open sans',
-                size = 18
+                size = legendsize
             ),
         ),
         showlegend=True
