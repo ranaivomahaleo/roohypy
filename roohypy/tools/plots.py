@@ -168,6 +168,7 @@ def getGTTemporalEvolutionAgentState(hdf5GTdataset,
     alpha = int(alpha)
     mu = int(mu)
     
+    t = np.array(hdf5GTdataset[type].dims[2][0])
     integer_sensitivity = hdf5GTdataset.attrs['integer_sensitivity']
     alphas_mus = np.array(hdf5GTdataset[type].dims[1][0])
     am_index = rp.tools.getIndexOf2DNpArray(alphas_mus, alpha, mu)
@@ -175,14 +176,27 @@ def getGTTemporalEvolutionAgentState(hdf5GTdataset,
     state_evolution = hdf5GTdataset[type][agent_id, am_index, :]
     state_evolution = np.dot(state_evolution, 1/integer_sensitivity)
     
-    return state_evolution
+    return state_evolution, t
 
 
 def getGTMultipleDataFromMultipleDatasets(configurations):
     """
     This function returns the temporal evolutions of 
     multiple trader from the configuration array.
+    
     bitshuffle is mandatory for this function.
+    
+    An example of configurations structure
+    configurations = np.array([
+        [resultsroot, resultname, 'dataset_1.h5', 'price', 940, 920, 125, 'd1'],
+        [resultsroot, resultname, 'dataset_2.h5', 'price', 940, 920, 125, 'd2'],
+        [resultsroot, resultname, 'dataset_3.h5', 'price', 940, 920, 125, 'd3'],
+        [resultsroot, resultname, 'dataset_4.h5', 'price', 940, 920, 125, 'd4'],
+        [resultsroot, resultname, 'dataset_5.h5', 'price', 940, 920, 125, 'd5'],
+        [resultsroot, resultname, 'dataset_6.h5', 'price', 940, 920, 125, 'd6'],
+        [resultsroot, resultname, 'dataset_7.h5', 'price', 940, 920, 125, 'd7'],
+        [resultsroot, resultname, 'dataset_8.h5', 'price', 940, 920, 125, 'd8'],
+    ])
     """
     # Open resources and get data
     data = []
@@ -194,12 +208,13 @@ def getGTMultipleDataFromMultipleDatasets(configurations):
         f = hdf.File(datasetfullpath, 'r')
     
         data_item = {}
-        state_evolution = rp.tools.getGTTemporalEvolutionAgentState(f,
+        state_evolution, t = rp.tools.getGTTemporalEvolutionAgentState(f,
                         type=file[3],
                         alpha=file[4],
                         mu=file[5],
                         agent_id=file[6])
         data_item['state_evolution'] = state_evolution
+        data_item['t'] = t
         data_item['label'] = file[7]
         data.append(data_item)
     

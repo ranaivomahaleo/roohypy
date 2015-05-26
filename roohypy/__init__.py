@@ -19,6 +19,9 @@ import roohypy.tools.generators
 # Namespace roohypy.tools.hdf5
 import roohypy.tools.hdf5
 
+# Namespace roohypy.tools.analysis
+import roohypy.tools.analysis
+
 # Namespace roohypy.models
 import roohypy.models
 
