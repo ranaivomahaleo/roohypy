@@ -7,10 +7,13 @@
 
 from __future__ import division
 
+import time
 import roohypy as rp
 import numpy as np
 import json as json
 import roohypy as rp
+import h5py as hdf
+from bitshuffle import h5
     
 def getGTParameterBassinFromGTTransposedHdf5(hdf5GTdataset,
                                     last_epochs=100,
@@ -173,3 +176,35 @@ def getGTTemporalEvolutionAgentState(hdf5GTdataset,
     state_evolution = np.dot(state_evolution, 1/integer_sensitivity)
     
     return state_evolution
+
+
+def getGTMultipleDataFromMultipleDatasets(configurations):
+    """
+    This function returns the temporal evolutions of 
+    multiple trader from the configuration array.
+    bitshuffle is mandatory for this function.
+    """
+    # Open resources and get data
+    data = []
+    for file in configurations:
+
+        start_time = time.time()
+    
+        datasetfullpath = file[0] + file[1] + file[2]
+        f = hdf.File(datasetfullpath, 'r')
+    
+        data_item = {}
+        state_evolution = rp.tools.getGTTemporalEvolutionAgentState(f,
+                        type=file[3],
+                        alpha=file[4],
+                        mu=file[5],
+                        agent_id=file[6])
+        data_item['state_evolution'] = state_evolution
+        data_item['label'] = file[7]
+        data.append(data_item)
+    
+        end_time = time.time()
+        print('Iteration duration')
+        print(end_time - start_time)
+        
+    return data
