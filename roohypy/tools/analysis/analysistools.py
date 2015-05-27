@@ -9,6 +9,7 @@
 from __future__ import division
 
 import numpy as np
+import statsmodels.tsa.stattools as st
 
 def compute_log_return(data_item, return_lag=1):
     """
@@ -37,4 +38,15 @@ def compute_log_return(data_item, return_lag=1):
     abs_log_return = np.abs(log_return)
     
     return log_return, abs_log_return, t_log_return
+
+
+def compute_autocorrelation_function(series, nlags=200):
+    """
+    This function returns the unbiased sample autocorrelation function.
+    """
+    autocorrelation = st.acf(series, unbiased=True, nlags=nlags)
+    xlags = range(0, nlags, 1)
     
+    return autocorrelation, xlags
+
+
