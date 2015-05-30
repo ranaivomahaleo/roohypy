@@ -216,6 +216,7 @@ def getGTMultipleDataFromMultipleDatasets(configurations):
         data_item['state_evolution'] = state_evolution
         data_item['t'] = t
         data_item['label'] = file[7]
+        data_item['return_lag'] = file[8]
         data.append(data_item)
     
         end_time = time.time()

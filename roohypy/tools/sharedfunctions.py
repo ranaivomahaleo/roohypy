@@ -223,29 +223,51 @@ def getHomogeneousInitialConditions(cini, gini, pini, n):
 def getRandomUniformIC(
         c_tot=900,
         g_tot=120,
-        p_min=0.075,
-        p_max=742.5,
+        alpha_mu_interval=20,
         c_min_lim=10,
         g_min_lim=10,
+        integer_sensitivity=1000,
+        alpha=100,
+        mu=100,
         n=3
     ):
     """
     Return random uniform initial conditions.
-    """
-    c_min = (c_min_lim * (n - 1) * c_tot) / (1 + c_min_lim * (n - 1))
-    c_max = c_tot - c_min
-    g_min = (g_min_lim * (n - 1) * g_tot) / (1 + g_min_lim * (n - 1))
-    g_max = g_tot - g_min
-    
-    X = np.random.uniform(low=c_min, high=c_max, size=n)
-    c_ic = np.divide(X.astype(float), sum(X))
-    c_ic = np.dot(c_ic, c_tot)
-    
-    Y = np.random.uniform(low=g_min, high=g_max, size=n)
-    g_ic = np.divide(Y.astype(float), sum(Y))
-    g_ic = np.dot(g_ic, g_tot)
-    
+    """    
+    # Generate random number from Dirichlet pdf
+    # that ensures sum up 1
+    # Test 10 times if all c > c_min_lim / integer_sensitivity
+    # AND all g > g_min_lim / integer_sensitivity
+    for i in range(0, 10, 1):
+        c_ic = np.dot(np.random.dirichlet(np.ones(n), 1), c_tot)
+        g_ic = np.dot(np.random.dirichlet(np.ones(n), 1), g_tot)
+        
+        test_c = c_ic[c_ic <= c_min_lim / integer_sensitivity].size
+        test_g = g_ic[g_ic <= g_min_lim / integer_sensitivity].size
+        if int(test_c + test_g) == 0:
+            break
+        else:
+            #If test fails after 10 times, use homogeneous initial conditions
+            # for c and g (re-compute p_ic later)
+            c_ic, g_ic, p_ic = getHomogeneousInitialConditions(c_tot/n, g_tot/n, 10, n)
+            # print('c_ic and g_ic below a particular limit')
+
+    # Compute p_min and p_max and generate U(p_min, p_max)
+    alpha_min = alpha_mu_interval / 1000
+    alpha_max = (1000 - alpha_mu_interval) / 1000
+    mu_min = alpha_min
+    mu_max = alpha_max
+    p_min = (alpha_min * c_tot) / (mu_max * g_tot)
+    p_max = (alpha_max * c_tot) / (mu_min * g_tot)
+        
     p_ic = np.random.uniform(low=p_min, high=p_max, size=n)
+
+#     print('c_ic', c_ic)
+#     print('sum_c_ic', np.sum(c_ic))
+#     print('g_ic', g_ic)
+#     print('sum_g_ic', np.sum(g_ic))
+#     print('p_ic', p_ic)
+#     quit()
     
     return c_ic, g_ic, p_ic
 

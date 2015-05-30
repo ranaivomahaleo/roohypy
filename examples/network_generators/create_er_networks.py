@@ -13,7 +13,7 @@ import roohypy.tools.generators as gen
 folder = './networks/'
 
 # Network name
-networkname = 'N200_p0.2_001'
+networkname = 'N200_p0.5_001'
 
 # Generate an Erdos Rényi network
-gen.createERNetworks(folder, networkname, n=200, p=0.2)
+gen.createERNetworks(folder, networkname, n=200, p=0.5)

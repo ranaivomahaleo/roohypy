@@ -34,8 +34,7 @@ def InitGTSimulation(simulation, network, attributes={}, simulation_index=0):
         c_ic, g_ic, p_ic = tl.getRandomUniformIC(
             c_tot=simulation['c_tot'],
             g_tot=simulation['g_tot'],
-            p_min=simulation['p_min'],
-            p_max=simulation['p_max'],
+            alpha_mu_interval=simulation['alpha_mu_interval'],
             c_min_lim=simulation['c_min_lim'],
             g_min_lim=simulation['g_min_lim'],
             n=n
