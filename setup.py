@@ -18,7 +18,9 @@ packages=["roohypy",
           "roohypy.simulators",
           "roohypy.tools",
           "roohypy.tools.generators",
-          "roohypy.tools.hdf5"]
+          "roohypy.tools.hdf5",
+          "roohypy.tools.analysis",
+          "roohypy.tools.preprocess"]
 
 setup(
     name='roohypy',
