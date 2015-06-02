@@ -13,7 +13,8 @@ def getDefaultPlotlyLayout(xtitle='', ytitle='',
         xrange=[0,1], yrange=[0,1],
         tickfontsize=23,
         r=10, b=80, t=10, l=140,
-        xlegend=0.8, ylegend=0.9, legendsize=18
+        xlegend=0.8, ylegend=0.9, legendsize=18,
+        showlegend=False
         ):
     """
     """
@@ -74,7 +75,7 @@ def getDefaultPlotlyLayout(xtitle='', ytitle='',
                 size = legendsize
             ),
         ),
-        showlegend=True
+        showlegend=showlegend
     )
     return layout
     

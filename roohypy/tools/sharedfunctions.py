@@ -16,6 +16,16 @@ import time
 import scipy.sparse as sparse
 import scipy.weave as weave
 
+
+def checkFileOrFolder(fullpath):
+    """
+    """
+    if os.path.exists(fullpath):
+        return True
+    else:
+        return False
+
+
 def checkCreateFolder(folderPath):
     """
     folderPath is with trailing slash
@@ -192,7 +202,7 @@ def edgeNodeCsvToAdj(nodefilepath, edgefilepath):
     
     A = nx.to_numpy_matrix(dgraph, dtype=np.uint32)
     A = np.array(A)
-    return A
+    return A, dgraph
     
     
 def getKINList(nodefilepath, edgefilepath):
@@ -242,6 +252,9 @@ def getRandomUniformIC(
         c_ic = np.dot(np.random.dirichlet(np.ones(n), 1), c_tot)
         g_ic = np.dot(np.random.dirichlet(np.ones(n), 1), g_tot)
         
+        c_ic = c_ic.reshape((n,))
+        g_ic = g_ic.reshape((n,))
+        
         test_c = c_ic[c_ic <= c_min_lim / integer_sensitivity].size
         test_g = g_ic[g_ic <= g_min_lim / integer_sensitivity].size
         if int(test_c + test_g) == 0:
@@ -262,6 +275,26 @@ def getRandomUniformIC(
         
     p_ic = np.random.uniform(low=p_min, high=p_max, size=n)
 
+#     print('c_ic', c_ic)
+#     print('sum_c_ic', np.sum(c_ic))
+#     print('g_ic', g_ic)
+#     print('sum_g_ic', np.sum(g_ic))
+#     print('p_ic', p_ic)
+#     quit()
+    
+    return c_ic, g_ic, p_ic
+    
+    
+def getICFromFile(icfile):
+    """
+    Get initial conditions from external file.
+    The icfile should exist.
+    """
+    icdata = np.loadtxt(icfile)
+    c_ic = icdata[:,0]
+    g_ic = icdata[:,1]
+    p_ic = icdata[:,2]
+    
 #     print('c_ic', c_ic)
 #     print('sum_c_ic', np.sum(c_ic))
 #     print('g_ic', g_ic)

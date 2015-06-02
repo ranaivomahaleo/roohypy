@@ -24,6 +24,17 @@ def getGTParameterBassinFromGTTransposedHdf5(hdf5GTdataset,
     Get parameter bassin from GT Transposed Hdf5 data set
     "Transposed" means that the shape of the hdf5 file
     is (agent_ids, alpha_mu, epochs)
+    
+    An example of 2D array returned by this function:
+    
+    Z = array([[  2,   2,   3, ...,  84,   1,  43],
+       [  2,   2,   3, ...,  64,  86,  76],
+       [  2,   2,   2, ...,  69,  66,  99],
+       ..., 
+       [ 97,  99, 100, ...,  98, 100,  96],
+       [ 97,  90,  94, ...,  98,  97,  99],
+       [ 99,  99,  97, ...,  99,  95,  99]])
+    
     """
     last_epochs = int(last_epochs)
     agent_id = int(agent_id)
@@ -188,14 +199,14 @@ def getGTMultipleDataFromMultipleDatasets(configurations):
     
     An example of configurations structure
     configurations = np.array([
-        [resultsroot, resultname, 'dataset_1.h5', 'price', 940, 920, 125, 'd1'],
-        [resultsroot, resultname, 'dataset_2.h5', 'price', 940, 920, 125, 'd2'],
-        [resultsroot, resultname, 'dataset_3.h5', 'price', 940, 920, 125, 'd3'],
-        [resultsroot, resultname, 'dataset_4.h5', 'price', 940, 920, 125, 'd4'],
-        [resultsroot, resultname, 'dataset_5.h5', 'price', 940, 920, 125, 'd5'],
-        [resultsroot, resultname, 'dataset_6.h5', 'price', 940, 920, 125, 'd6'],
-        [resultsroot, resultname, 'dataset_7.h5', 'price', 940, 920, 125, 'd7'],
-        [resultsroot, resultname, 'dataset_8.h5', 'price', 940, 920, 125, 'd8'],
+        [resultsroot, resultname, 'dataset_1.h5', 'price', 940, 920, 30, 'd1', 1],
+        [resultsroot, resultname, 'dataset_2.h5', 'price', 940, 920, 30, 'd2', 1],
+        [resultsroot, resultname, 'dataset_3.h5', 'price', 940, 920, 30, 'd3', 1],
+        [resultsroot, resultname, 'dataset_4.h5', 'price', 940, 920, 30, 'd4', 1],
+        [resultsroot, resultname, 'dataset_5.h5', 'price', 940, 920, 30, 'd5', 1],
+        [resultsroot, resultname, 'dataset_6.h5', 'price', 940, 920, 30, 'd6', 1],
+        [resultsroot, resultname, 'dataset_7.h5', 'price', 940, 920, 30, 'd7', 1],
+        [resultsroot, resultname, 'dataset_8.h5', 'price', 940, 920, 30, 'd8', 1],
     ])
     """
     # Open resources and get data

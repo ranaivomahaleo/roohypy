@@ -22,6 +22,9 @@ import roohypy.tools.hdf5
 # Namespace roohypy.tools.analysis
 import roohypy.tools.analysis
 
+# Namespace roohypy.tools.preprocess
+import roohypy.tools.preprocess
+
 # Namespace roohypy.models
 import roohypy.models
 

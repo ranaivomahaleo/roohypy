@@ -17,7 +17,7 @@ import roohypy.tools.hdf5 as hd
 import scipy.sparse as sparse
 
 
-def InitGTSimulation(simulation, network, attributes={}, simulation_index=0):
+def InitGTSimulation(simulation, network, attributes={}, simulation_index=0, icf=False, icfile=''):
     """This function inits all necessary temporary variables
     needed for a GT simulation.
     """
@@ -28,24 +28,29 @@ def InitGTSimulation(simulation, network, attributes={}, simulation_index=0):
     n, csc_A, elt_indices, elt_indices_tr, attributes = md.getMainNetworkCharacteristics(A)
     attributes['networkname'] = network['networkname']
     
-    # Process the initial conditions
-    # and some attributes of the simulation
-    if simulation['rand_ic']==True:
-        c_ic, g_ic, p_ic = tl.getRandomUniformIC(
-            c_tot=simulation['c_tot'],
-            g_tot=simulation['g_tot'],
-            alpha_mu_interval=simulation['alpha_mu_interval'],
-            c_min_lim=simulation['c_min_lim'],
-            g_min_lim=simulation['g_min_lim'],
-            n=n
-        )
+    # Get initial conditions from ic file and use icfile parameter
+    # Otherwise, use rand_ic
+    if icf:
+        c_ic, g_ic, p_ic = tl.getICFromFile(icfile)
     else:
-        c_ic, g_ic, p_ic  = tl.getHomogeneousInitialConditions(
-            simulation['c0'], 
-            simulation['g0'], 
-            simulation['p0'],
-            n
-        )
+        # Process the initial conditions
+        # and some attributes of the simulation
+        if simulation['rand_ic']==True:
+            c_ic, g_ic, p_ic = tl.getRandomUniformIC(
+                c_tot=simulation['c_tot'],
+                g_tot=simulation['g_tot'],
+                alpha_mu_interval=simulation['alpha_mu_interval'],
+                c_min_lim=simulation['c_min_lim'],
+                g_min_lim=simulation['g_min_lim'],
+                n=n
+            )
+        else:
+            c_ic, g_ic, p_ic  = tl.getHomogeneousInitialConditions(
+                simulation['c0'], 
+                simulation['g0'], 
+                simulation['p0'],
+                n
+            )
 
     # Get all possible combinations of values of alpha and mu
     # and build the chunks for epochs and alpha_mu
@@ -117,11 +122,14 @@ def InitGTSimulation(simulation, network, attributes={}, simulation_index=0):
     return cash, goods, price, iterate
 
 
-def LaunchGTSimulation(simulation, network, attributes={}, simulation_index=0):
+def LaunchGTSimulation(simulation, network, attributes={}, simulation_index=0, icf=False, icfile=''):
     """This function launches a GT simulation.
     """
     # Init and launch the GT simulation
-    cash, goods, price, iterate = InitGTSimulation(simulation, network, attributes=attributes, simulation_index=simulation_index)
+    cash, goods, price, iterate = InitGTSimulation(simulation, network,
+                                        attributes=attributes,
+                                        simulation_index=simulation_index,
+                                        icf=icf, icfile=icfile)
 
     for pair_am in iterate['tuple_am']:
         cash[:,:,0] = iterate['cashini'][:,:,0]

@@ -78,6 +78,21 @@ def compute_distribution_norm_fit(series, bins=100, density=True, serieslabel=''
     ynorm = scst.norm.pdf(xnorm, loc=mu, scale=sigma)
     
     return x, y, xnorm, ynorm
+    
+    
+def compute_pmf(series, density=False):
+    """
+    This function is dedicated for integer values with a pmf.
+    For instance,
+        pmf of the bifurcation parameter Z
+        pmf of degree distribution
+    """
+    hist_series = np.histogram(series,
+                                bins=range(np.min(series), np.max(series)+2),
+                                density=density)
+    x = hist_series[1]
+    y = hist_series[0]
+    return x, y
 
 
 def compute_autocorrelation_function(series, nlags=200):
