@@ -46,8 +46,8 @@ def InitGTSimulation(simulation, network, attributes={}, simulation_index=0, icf
             )
         else:
             c_ic, g_ic, p_ic  = tl.getHomogeneousInitialConditions(
-                simulation['c0'], 
-                simulation['g0'], 
+                simulation['c_tot'] / n, 
+                simulation['g_tot'] / n, 
                 simulation['p0'],
                 n
             )
