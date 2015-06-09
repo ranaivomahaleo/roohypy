@@ -49,12 +49,18 @@ def InitGTSimulation(simulation, network,
                 n=n
             )
         else:
-            c_ic, g_ic, p_ic  = tl.getHomogeneousInitialConditions(
-                simulation['c_tot'] / n, 
-                simulation['g_tot'] / n, 
-                simulation['p0'],
-                n
-            )
+            if simulation['using_c0_g0']==True:
+                c_ic, g_ic, p_ic  = tl.getHomogeneousInitialConditions(
+                    simulation['c0'], 
+                    simulation['g0'], 
+                    simulation['p0'],
+                    n)
+            else:
+                c_ic, g_ic, p_ic  = tl.getHomogeneousInitialConditions(
+                    simulation['c_tot'] / n, 
+                    simulation['g_tot'] / n, 
+                    simulation['p0'],
+                    n)
 
     # Get all possible combinations of values of alpha and mu
     # and build the chunks for epochs and alpha_mu
