@@ -249,8 +249,8 @@ def getRandomUniformIC(
     # Test 10 times if all c > c_min_lim / integer_sensitivity
     # AND all g > g_min_lim / integer_sensitivity
     for i in range(0, 10, 1):
-        c_ic = np.dot(np.random.dirichlet(np.ones(n), 1), c_tot)
-        g_ic = np.dot(np.random.dirichlet(np.ones(n), 1), g_tot)
+        c_ic = np.dot(np.random.dirichlet(np.ones(n)*50, 1), c_tot)
+        g_ic = np.dot(np.random.dirichlet(np.ones(n)*50, 1), g_tot)
         
         c_ic = c_ic.reshape((n,))
         g_ic = g_ic.reshape((n,))
@@ -305,13 +305,32 @@ def getICFromFile(icfile):
     return c_ic, g_ic, p_ic
 
 
+def getEpochsFromChunkIds(chunkidsarray, chunk_epoch):
+    """
+    This function gets an array of chunk ids
+    and returns the complete array of corresponding epochs id.
+    For instance with:
+        chunkidsarray = [0, 6]
+        chunk_epoch = [[0,99], ...[600, 699], ... [19900, 19999]]
+        returned epochs array is: [0,...99,600,...699]
+    """
+    epochs_list = list()
+    validchunkidsarray = list()
+    for chunkid in chunkidsarray:
+        # Consider only the existing chunk id.
+        if chunkid < len(chunk_epoch):
+            epochs_list = np.append(epochs_list, chunk_epoch[chunkid])
+            validchunkidsarray.append(chunkid)
+    return epochs_list, validchunkidsarray
+
 def getResultFolderName(networkname='networkname',
                         step=10,
                         epochs=100,
                         integer_sensitivity=1):
     """
     """
-    return networkname + '_' + 's' + str(step) + '_is' + str(integer_sensitivity) + '_i' + str(epochs)
+    return (networkname + '_' + 's' + str(step)
+        + '_is' + str(integer_sensitivity) + '_i' + str(epochs))
 
 
 def c_rowsum(o, input, indices):
@@ -332,160 +351,5 @@ def c_rowsum(o, input, indices):
     weave.inline(code, ['o', 'input', 'indices'])
 
 
-# def rows_sum_norm(A):
-#     """This function returns the normalized version of row-sum
-#     of a square matrix.
-# 
-#     Parameters
-#     ----
-#     A: numpy array
-#       An input square matrix
-#     Returns
-#     ----
-#     Return diag^(-1)(A1).A
-#     """
-#     n_rows = A.shape[0]
-#     one = np.ones(n_rows)
-# #     a1 = reduce(np.dot, [A, one])
-# #     diag_inv_a1 = la.inv(np.diag(a1))
-# #     return reduce(np.dot, [diag_inv_a1, A])
-#     
-#     return np.dot(la.inv(np.diag(np.dot(A, one))), A)
-    
-    
-# def c_rowsum(o, input, indices):
-#     code = \
-#     """
-#     int m, i, j;
-#     for (m=0; m<Nindices[0]; m++) {
-#         i = INDICES2(m,0);
-#         j = INDICES2(m,1);
-#         O1(i) = 0;
-#     }
-#     for (m=0; m<Nindices[0]; m++) {
-#         i = INDICES2(m,0);
-#         j = INDICES2(m,1);
-#         O1(i) = O1(i) + INPUT2(i,j);
-#     }
-#     """
-#     weave.inline(code, ['o', 'input', 'indices'])
-# 
-# 
-# def vector_to_square_matrix(v):
-#     """
-#     Example:
-#     v = np.array([ 0.5  0.5  0.5  1. ])
-#     
-#     Return
-#     [[ 0.5  0.5  0.5  0.5]
-#      [ 0.5  0.5  0.5  0.5]
-#      [ 0.5  0.5  0.5  0.5]
-#      [ 1.   1.   1.   1. ]]
-#     """
-#     n_rows = v.shape[0]
-#     return np.transpose(v * np.ones((n_rows, 1)))
-# 
-# 
-# def vector_to_square_row(v, csc_res_one):
-#     """
-#     Example:
-#     v = np.array([ 0.5  0.5  0.5  1. ])
-#     csc_res_one has shape (length_v, 1)
-#     
-#     Return
-#     [[ 0.5  0.5  0.5  1.]
-#      [ 0.5  0.5  0.5  1.
-#      [ 0.5  0.5  0.5  1.]
-#      [ 0.5  0.5  0.5  1. ]]
-#     """
-#     length_v = v.shape[0]
-#     result = csc_res_one * v.reshape(1, length_v)
-#     return  result
-# 
-# 
-# def rows_sum_norm_opt(A):
-#     """
-#     """
-#     n_rows = A.shape[0]
-#     div_sum_A = 1 / np.sum(A, axis=1)
-#     row_sum_norm = np.multiply(A, vector_to_square_matrix(div_sum_A))
-#     return row_sum_norm
-# 
-# 
-# def optimized_rows_sum_norm_jit(A, nzarray):
-# 
-#     n_rows = A.shape[0]
-#     nz_rows = nzarray.shape[0]
-#     row_sum = np.zeros(n_rows)
-#     row_sum_norm = np.zeros((n_rows, n_rows))
-#     
-#     optimized_rows_sum_norm(row_sum_norm, row_sum, n_rows, A, nzarray, nz_rows)
-# 
-#     return row_sum_norm
-# 
-# 
-# def optimized_rows_sum_norm(row_sum_norm, row_sum, n_rows, A, nzarray, nz_rows):
-#     """This function returns the normalized version of row-sum
-#     of a square matrix (optimized version for JIT compiler).
-# 
-#     Parameters
-#     ----
-#     A: numpy array
-#       An input square matrix
-#     Returns
-#     ----
-#     Return diag^(-1)(A1).A
-#     """    
-#     for i in range(nz_rows):
-#         row_sum[nzarray[i,0]] = row_sum[nzarray[i,0]] \
-#             + A[nzarray[i,0], nzarray[i,1]]
-#     
-#     for i in range(nz_rows):
-#         row_sum_norm[nzarray[i,0], nzarray[i,1]] = \
-#             A[nzarray[i,0], nzarray[i,1]] / row_sum[nzarray[i,0]]
 
-
-# def metafilename(initial_conditions_c=(0.8, 0.1, 0.1),
-#                  initial_conditions_g=(0.8, 0.1, 0.1),
-#                  step=0.005):
-#     """
-#     """
-#     complete_meta = ('N1_meta_c123_'
-#                           + str(round(initial_conditions_c[0], 5)) + '_' 
-#                           + str(round(initial_conditions_c[1], 5)) + '_'
-#                           + str(round(initial_conditions_c[2], 5)) + '_'
-#                           + 'g123_'
-#                           + str(round(initial_conditions_g[0], 5)) + '_' 
-#                           + str(round(initial_conditions_g[1], 5)) + '_'
-#                           + str(round(initial_conditions_g[2], 5))
-#                           + '_s'
-#                           + str(step))
-#     complete_meta_folder  = complete_meta + '/'
-#     complete_meta_filename = complete_meta + '.json'
-#     
-#     return complete_meta, complete_meta_folder, complete_meta_filename
-# 
-# 
-# def metafilenamecomplete(networkname='N1',
-#                          initial_conditions_c=(0.8, 0.1, 0.1),
-#                          initial_conditions_g=(0.8, 0.1, 0.1),
-#                          step=0.005,
-#                          iteration=100):
-#     """
-#     """
-#     c_indices = 'c' + "".join(map(lambda x:str(x), list(range(0,len(initial_conditions_c),1))))
-#     g_indices = 'g' + "".join(map(lambda x:str(x), list(range(0,len(initial_conditions_g),1))))
-#     c_ini = "_".join(map(lambda x: str(round(x,5)),initial_conditions_c))
-#     g_ini = "_".join(map(lambda x: str(round(x,5)),initial_conditions_g))
-#     
-#     complete_meta = (networkname
-#                     + '_s'
-#                     + str(step)
-#                     + '_i'
-#                     + str(iteration))
-#     complete_meta_folder  = complete_meta + '/'
-#     complete_meta_filename = 'meta.txt'
-#     
-#     return complete_meta, complete_meta_folder, complete_meta_filename
-    
 

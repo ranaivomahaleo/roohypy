@@ -22,6 +22,7 @@ from bitshuffle import h5
 def createGTHdf5File(datasetfullpath,
         shape=(100, 100, 100),
         epochs=20000,
+        chunk_epoch=[[0, 1, 2], [3, 4, 5]],
         ordered_tuple_alpha_mu=[(20,20)],
         agents_id_list=[0, 1, 2],
         attributes={'title': ''},
@@ -53,7 +54,23 @@ def createGTHdf5File(datasetfullpath,
     for network_item in network:
         f.attrs[network_item] = network[network_item]
     
-    f.create_dataset('t', data=range(0, epochs, 1))
+    # If select chunk=False (default value), 
+    # save all data to hdf5 file
+    # otherwise, select the configured part.
+    if not simulation['selectchunk']:
+        epochs_list = range(0, epochs, 1)
+        validchunkidsarray = range(0, len(chunk_epoch), 1)
+        f.create_dataset('t', data=epochs_list)
+    else:
+        epochs_list, \
+        validchunkidsarray = \
+        tl.getEpochsFromChunkIds(simulation['saved_chunkids'],
+                                    chunk_epoch)
+        f.create_dataset('t', data=epochs_list)
+    
+    f.attrs['selectchunk'] = simulation['selectchunk']
+    f.create_dataset('validchunkidsarray', data=validchunkidsarray)
+    
     f.create_dataset('alphas_mus', data=ordered_tuple_alpha_mu)
     f.create_dataset('agents_id', data=agents_id_list)
 
@@ -85,7 +102,8 @@ def createGTHdf5File(datasetfullpath,
     
     
 def loadGTIterationToHdf5File(f, pair_am, pair_t,
-        cash, goods, price, integer_sensitivity=1):
+        cash, goods, price, integer_sensitivity=1,
+        tuple_t_to_index={(0, 99): 0}):
     """This function loads each chunk data to the hdf5 file handler f.
     The data from cash, goods and price chunks are float data.
     Float data are transformed to integer data using the integer_sensitivity
@@ -97,12 +115,25 @@ def loadGTIterationToHdf5File(f, pair_am, pair_t,
         The reference to the hdf5 file after loading the chunk data.
     
     """
-    c = np.round(np.dot(cash[:, 0:pair_am[1]-pair_am[0]+1, 0:pair_t[1]-pair_t[0]+1], integer_sensitivity), 0)
-    g = np.round(np.dot(goods[:, 0:pair_am[1]-pair_am[0]+1, 0:pair_t[1]-pair_t[0]+1], integer_sensitivity), 0)
-    p = np.round(np.dot(price[:, 0:pair_am[1]-pair_am[0]+1, 0:pair_t[1]-pair_t[0]+1], integer_sensitivity), 0)
-    
-    f['cash'][:, pair_am[0]:pair_am[1]+1, pair_t[0]:pair_t[1]+1] = c
-    f['goods'][:, pair_am[0]:pair_am[1]+1, pair_t[0]:pair_t[1]+1] = g
-    f['price'][:, pair_am[0]:pair_am[1]+1, pair_t[0]:pair_t[1]+1] = p
+    if tuple_t_to_index[pair_t] in f['validchunkidsarray']:
+        txtinfo = ''
+        txtinfo += '\n'
+        txtinfo += 'Save' + str(pair_t) + ' chunk \n'
+        txtinfo += 'chunk id=' + str(tuple_t_to_index[pair_t]) + ' chunk \n'
+        print(txtinfo)
+
+        c = np.round(np.dot(
+            cash[:, 0:pair_am[1]-pair_am[0]+1, 0:pair_t[1]-pair_t[0]+1],
+            integer_sensitivity), 0)
+        g = np.round(np.dot(
+            goods[:, 0:pair_am[1]-pair_am[0]+1, 0:pair_t[1]-pair_t[0]+1],
+            integer_sensitivity), 0)
+        p = np.round(np.dot(
+            price[:, 0:pair_am[1]-pair_am[0]+1, 0:pair_t[1]-pair_t[0]+1],
+            integer_sensitivity), 0)
+
+        f['cash'][:, pair_am[0]:pair_am[1]+1, pair_t[0]:pair_t[1]+1] = c
+        f['goods'][:, pair_am[0]:pair_am[1]+1, pair_t[0]:pair_t[1]+1] = g
+        f['price'][:, pair_am[0]:pair_am[1]+1, pair_t[0]:pair_t[1]+1] = p
     
     return f

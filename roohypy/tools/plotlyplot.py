@@ -5,8 +5,8 @@
 from __future__ import division
 
 # https://pypi.python.org/pypi/plotly
-import plotly.plotly as py
-from plotly.graph_objs import *
+#import plotly.plotly as py
+#from plotly.graph_objs import *
 
 def getDefaultPlotlyLayout(xtitle='', ytitle='',
         xautorange=False, yautorange=False,
