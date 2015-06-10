@@ -6,7 +6,11 @@
 #    All rights reserved.
 #    BSD license.
 
+
 from __future__ import division
+
+from decimal import *
+getcontext().prec = 15
 
 import time
 import networkx as nx

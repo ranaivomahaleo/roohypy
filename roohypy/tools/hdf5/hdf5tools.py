@@ -81,7 +81,9 @@ def createGTHdf5File(datasetfullpath,
         h5.create_dataset(f,
                         type,
                         (shape[0], shape[1], shape[2]),
-                        np.uint32,
+                        #np.uint32,
+                        np.float64,
+                        #np.uint64,
                         chunks=chunksize,
                         filter_pipeline=filter_pipeline,
                         filter_opts=filter_opts)
@@ -122,15 +124,19 @@ def loadGTIterationToHdf5File(f, pair_am, pair_t,
         txtinfo += 'chunk id=' + str(tuple_t_to_index[pair_t]) + ' chunk \n'
         print(txtinfo)
 
-        c = np.round(np.dot(
-            cash[:, 0:pair_am[1]-pair_am[0]+1, 0:pair_t[1]-pair_t[0]+1],
-            integer_sensitivity), 0)
-        g = np.round(np.dot(
-            goods[:, 0:pair_am[1]-pair_am[0]+1, 0:pair_t[1]-pair_t[0]+1],
-            integer_sensitivity), 0)
-        p = np.round(np.dot(
-            price[:, 0:pair_am[1]-pair_am[0]+1, 0:pair_t[1]-pair_t[0]+1],
-            integer_sensitivity), 0)
+#         c = np.round(np.dot(
+#             cash[:, 0:pair_am[1]-pair_am[0]+1, 0:pair_t[1]-pair_t[0]+1],
+#             integer_sensitivity), 0)
+#         g = np.round(np.dot(
+#             goods[:, 0:pair_am[1]-pair_am[0]+1, 0:pair_t[1]-pair_t[0]+1],
+#             integer_sensitivity), 0)
+#         p = np.round(np.dot(
+#             price[:, 0:pair_am[1]-pair_am[0]+1, 0:pair_t[1]-pair_t[0]+1],
+#             integer_sensitivity), 0)
+        
+        c = cash[:, 0:pair_am[1]-pair_am[0]+1, 0:pair_t[1]-pair_t[0]+1]
+        g = goods[:, 0:pair_am[1]-pair_am[0]+1, 0:pair_t[1]-pair_t[0]+1]
+        p = price[:, 0:pair_am[1]-pair_am[0]+1, 0:pair_t[1]-pair_t[0]+1]
 
         f['cash'][:, pair_am[0]:pair_am[1]+1, pair_t[0]:pair_t[1]+1] = c
         f['goods'][:, pair_am[0]:pair_am[1]+1, pair_t[0]:pair_t[1]+1] = g
