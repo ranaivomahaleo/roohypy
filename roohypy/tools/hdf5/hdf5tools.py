@@ -18,6 +18,9 @@ import h5py as hdf
 from h5py import h5f, h5d, h5z, h5t, h5s, filters
 from bitshuffle import h5
 
+from decimal import *
+getcontext().prec = 50
+
 
 def createGTHdf5File(datasetfullpath,
         shape=(100, 100, 100),
@@ -133,6 +136,14 @@ def loadGTIterationToHdf5File(f, pair_am, pair_t,
 #         p = np.round(np.dot(
 #             price[:, 0:pair_am[1]-pair_am[0]+1, 0:pair_t[1]-pair_t[0]+1],
 #             integer_sensitivity), 0)
+
+        #print(np.sum(cash[:,81,99]))
+        
+        cash = cash.astype(float)
+        goods = goods.astype(float)
+        price = price.astype(float)
+        
+        #print(np.sum(cash[:,81,99]))
         
         c = cash[:, 0:pair_am[1]-pair_am[0]+1, 0:pair_t[1]-pair_t[0]+1]
         g = goods[:, 0:pair_am[1]-pair_am[0]+1, 0:pair_t[1]-pair_t[0]+1]

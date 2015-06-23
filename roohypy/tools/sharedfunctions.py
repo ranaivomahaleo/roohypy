@@ -16,6 +16,7 @@ import time
 import scipy.sparse as sparse
 import scipy.weave as weave
 
+import gmpy2 as g2
 
 def checkFileOrFolder(fullpath):
     """
@@ -224,9 +225,13 @@ def getHomogeneousInitialConditions(cini, gini, pini, n):
     """
     Return homogeneous initial conditions
     """
-    p_ic = pini * np.ones(n)
-    c_ic = cini * np.ones(n)
-    g_ic = gini * np.ones(n)
+    #g2.get_context().precision = 400
+    #g2.get_context().round=3
+    
+    ones = np.ones(n, dtype=object) 
+    p_ic = pini * ones
+    c_ic = cini * ones
+    g_ic = gini * ones
     return c_ic, g_ic, p_ic
     
     

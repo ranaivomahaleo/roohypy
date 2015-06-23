@@ -9,9 +9,6 @@
 
 from __future__ import division
 
-from decimal import *
-getcontext().prec = 15
-
 import time
 import networkx as nx
 import numpy as np
@@ -21,6 +18,17 @@ import roohypy.tools as tl
 import scipy.sparse as sparse
 import scipy.weave as weave
 
+import gmpy2 as g2
+
+import pyximport
+# pyximport.install(
+#     setup_args={
+#         "include_dirs":[np.get_include()],
+#     },
+#     reload_support=True)
+pyximport.install()
+
+import c_gtmodel
 
 def getListOfAlphaMu(step_parameter_interval):
     """alpha and mu are the parameters of GT-Model.
@@ -91,8 +99,8 @@ def edgeNodeCsvToAdj(nodefilepath, edgefilepath):
     dgraph.add_nodes_from(nodes[:, 1])
     dgraph.add_edges_from(edges[:, 1:])
     
-    A = nx.to_numpy_matrix(dgraph, dtype=np.uint32)
-    A = np.array(A)
+    A = nx.to_numpy_matrix(dgraph, dtype=np.uint16)
+    #A = np.array(A)
     
     return A
     
@@ -132,7 +140,7 @@ def getMainNetworkCharacteristics(A):
             that will be used when generating random graphs.
 
     """
-    csc_A = sparse.csc_matrix(A)
+    csc_A = sparse.csc_matrix(A)    
     n = len(A)
     
     nonzero_indices = csc_A.nonzero()
@@ -164,12 +172,21 @@ def getNullArraysAndVectors(n):
     """This function returns two arrays and four vectors
     that are used as temporary storage for the optimized GT-Model dynamics.
     """
-    zeros = np.zeros((n, n))
-    zeros1 = np.zeros((n, n))
-    zeros_vector = np.zeros((n,))
-    zeros_vector1 = np.zeros((n,))
-    zeros_vector2 = np.zeros((n,))
-    zeros_vector3 = np.zeros((n,))
+    
+    #g2.get_context().precision = 100
+    
+    zeros = g2.mpfr('0') * np.zeros((n, n))
+
+    zeros1 = g2.mpfr('0') * np.zeros((n, n))
+    
+    zeros_vector = g2.mpfr('0') * np.zeros((n,1))
+    
+    zeros_vector1 = g2.mpfr('0') * np.zeros((n,1))
+    
+    zeros_vector2 = g2.mpfr('0') * np.zeros((n,1))
+    
+    zeros_vector3 = g2.mpfr('0') * np.zeros((n,1))
+
     return zeros, zeros1, zeros_vector, zeros_vector1, zeros_vector2, zeros_vector3
     
 
@@ -247,7 +264,8 @@ def optimizedGTModel6(
         A, csc_A, 
         elt_indices, elt_indices_tr,
         zeros, zeros1, zeros_vector, zeros_vector1, zeros_vector2, zeros_vector3,
-        cash, goods, price):
+        cash, goods, price,
+        n):
     """This function is the optimized version (v6) of the GT-Model dynamics.
     
     The inputs are the cash, goods and price arrays with shape
@@ -301,6 +319,10 @@ def optimizedGTModel6(
         They have the following shape (:, chunk_alpha_mu, chunk_epoch+1)
     
     """
+    
+    #g2.get_context().precision = 100
+    #g2.get_context().round=2
+    
     start_am = pair_am[0]
     end_am = pair_am[1]
 #     print('start_am', start_am)
@@ -313,76 +335,59 @@ def optimizedGTModel6(
 #         print(am)
 #         print(pair_alpha_mu)
         
-        alpha =  pair_alpha_mu[0] * 0.001
-        mu = pair_alpha_mu[1] * 0.001
-#         
+        alpha =  g2.mpfr(pair_alpha_mu[0]) * g2.mpfr('0.001')
+        mu = g2.mpfr(pair_alpha_mu[1]) * g2.mpfr('0.001')
+        
 #         print('alpha', alpha)
 #         print('mu', mu)
 #         print('====================')
+#         quit()
         
         for t in range(0, end_t-start_t+1, 1):
-            c = cash[:,am,t]
-            g = goods[:,am,t]
-            p = price[:,am,t]
-            
-#             print('t', t+1)
-#             print(end_t-start_t)
-#             print(c)
-#             print(g)
-#             print(p)
-            
-            length_c = c.shape[0]
-            alpha_c = np.dot(alpha, c)
-            mu_g = np.dot(mu, g)
-            one_alpha_c = np.dot(1-alpha, c)
-            one_mu_g = np.dot(1-mu, g)
-            
-            inv_p = 1 / p
-            sum_inv_p = 1 / (csc_A * inv_p)
-            c_compute_cash_flow(zeros, alpha_c * sum_inv_p, 
-                inv_p, elt_indices)
-            C_f = zeros
-        
-            #print('C_f=', C_f)
-        
-            C_f_tr = np.transpose(C_f)
-        
-            #print('C_f_tr=', C_f_tr)
-        
-            tl.c_rowsum(zeros_vector, C_f_tr, elt_indices_tr)
-            sum_C_f_tr = zeros_vector
-        
-            #print('sum_C_f_tr=', sum_C_f_tr)
-        
-            d = mu_g * (1 / sum_C_f_tr)
-            c_compute_goods_flow(zeros1, d, C_f_tr, elt_indices_tr)
-            g_f = zeros1
-        
-            #print('G_f=', g_f)
 
-            c_next = one_alpha_c + sum_C_f_tr
-        
-        
-            g_f_tr = g_f.transpose()
-            tl.c_rowsum(zeros_vector1, g_f_tr, elt_indices)
-            sum_g_f_tr = zeros_vector1
-        
-            #print('sum_g_f_tr=', sum_g_f_tr)
-        
-            g_next = one_mu_g + sum_g_f_tr
-        
-            c_compute_price(zeros_vector2, C_f, g_f, elt_indices)
-            # zeros_vector3 is important to avoid passing by reference
-            # but make a real copy of zeros_vector2
-            p_next = zeros_vector3 + zeros_vector2
+            c = (cash[:,am,t]).reshape((n,1))
+            g = (goods[:,am,t]).reshape((n,1))
+            p = (price[:,am,t]).reshape((n,1))
+                        
+            alpha_c, \
+            mu_g, \
+            one_alpha_c, \
+            one_mu_g = c_gtmodel.cython_four_scalar_vector_multiplications(
+                            alpha, c,
+                            mu, g,
+                            g2.mpfr('1')-alpha, c,
+                            g2.mpfr('1')-mu, g
+            )
+
+            inv_p = g2.mpfr('1') / p
+            temp = c_gtmodel.cython_adjmatrix_times_vector(
+                        n, inv_p, elt_indices)
+            sum_inv_p =  g2.mpfr('1') / temp
+
+            D = np.multiply(alpha_c, sum_inv_p)
             
+            # elt_indices is a np array with int elements
+            C_f = c_gtmodel.cython_compute_cash_flow(zeros, D, inv_p, elt_indices)
+            C_f_tr = np.transpose(C_f)
+
+            sum_C_f_tr = c_gtmodel.cython_row_sum(zeros_vector, C_f_tr, elt_indices_tr)
+            c_next = one_alpha_c + sum_C_f_tr
+
+            D = np.multiply(mu_g, g2.mpfr('1') / sum_C_f_tr)
+            g_f = c_gtmodel.cython_compute_goods_flow(zeros1, D, C_f_tr, elt_indices_tr)
+            g_f_tr = g_f.transpose()
+            sum_g_f_tr = c_gtmodel.cython_row_sum(zeros_vector1, g_f_tr, elt_indices)
+            g_next = one_mu_g + sum_g_f_tr
+            
+            p_next = c_gtmodel.cython_compute_price(zeros_vector2, C_f, g_f, elt_indices)
             
 #             print('c_next=', c_next)
 #             print('g_next=', g_next)
 #             print('p_next=', p_next)
-
-            cash[:,am,t+1] = c_next
-            goods[:,am,t+1] = g_next
-            price[:,am,t+1] = p_next
+#             quit()
+            
+            cash[:,am,t+1] = c_next.reshape(n)
+            goods[:,am,t+1] = g_next.reshape(n)
+            price[:,am,t+1] = p_next.reshape(n)
     
     return cash, goods, price

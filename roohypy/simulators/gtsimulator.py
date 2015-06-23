@@ -16,12 +16,16 @@ import roohypy.models as md
 import roohypy.tools.hdf5 as hd
 import scipy.sparse as sparse
 
+import gmpy2 as g2
 
 def InitGTSimulation(simulation, network,
         attributes={}, simulation_index=0, icf=False, icfile=''):
     """This function inits all necessary temporary variables
     needed for a GT simulation.
     """
+    # mp.dps = 50 # Set high decimal precision
+
+    
     # Process network data
     nodefilepath = (network['networkfolder'] + 
         network['networkname']  + '/nodes.csv')
@@ -41,8 +45,8 @@ def InitGTSimulation(simulation, network,
         # and some attributes of the simulation
         if simulation['rand_ic']==True:
             c_ic, g_ic, p_ic = tl.getRandomUniformIC(
-                c_tot=simulation['c_tot'],
-                g_tot=simulation['g_tot'],
+                c_tot=g2.mpfr(simulation['c_tot']),
+                g_tot=g2.mpfr(simulation['g_tot']),
                 alpha_mu_interval=simulation['alpha_mu_interval'],
                 c_min_lim=simulation['c_min_lim'],
                 g_min_lim=simulation['g_min_lim'],
@@ -51,17 +55,17 @@ def InitGTSimulation(simulation, network,
         else:
             if simulation['using_c0_g0']==True:
                 c_ic, g_ic, p_ic  = tl.getHomogeneousInitialConditions(
-                    simulation['c0'], 
-                    simulation['g0'], 
-                    simulation['p0'],
+                    g2.mpfr(simulation['c0']),
+                    g2.mpfr(simulation['g0']), 
+                    g2.mpfr(simulation['p0']),
                     n)
             else:
                 c_ic, g_ic, p_ic  = tl.getHomogeneousInitialConditions(
-                    simulation['c_tot'] / n, 
-                    simulation['g_tot'] / n, 
-                    simulation['p0'],
+                    g2.mpfr(simulation['c_tot']) / g2.mpfr(n), 
+                    g2.mpfr(simulation['g_tot']) / g2.mpfr(n), 
+                    g2.mpfr(simulation['p0']),
                     n)
-
+    
     # Get all possible combinations of values of alpha and mu
     # and build the chunks for epochs and alpha_mu
     alphas_mus, \
@@ -88,19 +92,19 @@ def InitGTSimulation(simulation, network,
     tuple_t_to_index = {}
     for index, value in enumerate(tuple_t):
         tuple_t_to_index[value] = index
-
+    
     one = np.ones((n, simulation['alpha_mu_chunk_size'],
-        simulation['epochs_chunk_size']))
+        simulation['epochs_chunk_size']), dtype=object)    
     cashini = one * c_ic.reshape((n, 1, 1))
     goodsini = one * g_ic.reshape((n, 1, 1))
     priceini = one * p_ic.reshape((n, 1, 1))
-
-    cash = np.zeros((n, simulation['alpha_mu_chunk_size'],
-        simulation['epochs_chunk_size']+1))
-    goods = np.zeros((n, simulation['alpha_mu_chunk_size'],
-        simulation['epochs_chunk_size']+1))
-    price = np.zeros((n, simulation['alpha_mu_chunk_size'],
-        simulation['epochs_chunk_size']+1))
+    
+    cash = g2.mpfr('1') * np.zeros((n, simulation['alpha_mu_chunk_size'],
+        simulation['epochs_chunk_size']+1), dtype=object)
+    goods = g2.mpfr('1') * np.zeros((n, simulation['alpha_mu_chunk_size'],
+        simulation['epochs_chunk_size']+1), dtype=object)
+    price = g2.mpfr('1') * np.zeros((n, simulation['alpha_mu_chunk_size'],
+        simulation['epochs_chunk_size']+1), dtype=object)
     
     # Build the temporary arrays and vectors for optimized GT-Model
     zeros, zeros1, \
@@ -150,6 +154,7 @@ def InitGTSimulation(simulation, network,
     iterate['zeros_vector1'] = zeros_vector1
     iterate['zeros_vector2'] = zeros_vector2
     iterate['zeros_vector3'] = zeros_vector3
+    iterate['n'] = n
 
     return cash, goods, price, iterate
 
@@ -183,7 +188,8 @@ def LaunchGTSimulation(simulation, network,
                 iterate['zeros'], iterate['zeros1'],
                 iterate['zeros_vector'], iterate['zeros_vector1'],
                 iterate['zeros_vector2'], iterate['zeros_vector3'],
-                cash, goods, price)
+                cash, goods, price,
+                iterate['n'])
             
             # Load in f
             iterate['f'] = hd.loadGTIterationToHdf5File(iterate['f'],
@@ -197,8 +203,6 @@ def LaunchGTSimulation(simulation, network,
             cash[:,:,0] = cash[:,:,pair_t[1]-pair_t[0]+1]
             goods[:,:,0] = goods[:,:,pair_t[1]-pair_t[0]+1]
             price[:,:,0] = price[:,:,pair_t[1]-pair_t[0]+1]
-        
-            #   print(cash)
         
             end_time = time.time()
             print(end_time - start_time)
