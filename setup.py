@@ -1,13 +1,14 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#from setuptools import setup # Always prefer setuptools over distutils
+from setuptools import setup # Always prefer setuptools over distutils
 from codecs import open  # To use a consistent encoding
 from os import path
 import numpy as np
 
-from distutils.core import setup
-from Cython.Build import cythonize
+#from distutils.core import setup
+#from distutils.extension import Extension
+#from Cython.Build import cythonize
 
 here = path.abspath(path.dirname(__file__))
 
@@ -35,10 +36,11 @@ setup(
     author='Ranaivo Razakanirina',
     author_email='ranaivo.razakanirina@atety.com',
     license='BSD 3-clause',
-    install_requires=['networkx', 'numpy', 'bitshuffle', 'scipy', 'h5py'],
+    #nstall_requires=['networkx', 'numpy', 'bitshuffle', 'scipy', 'h5py'],
     
-    ext_modules = cythonize(["roohypy/models/c_gtmodel.pyx"]),
-    include_dirs=[np.get_include()],
+    #ext_modules = cythonize(["roohypy/models/c_gtmodel.pyx"],
+    #                include_path=[np.get_include()]),
+    #include_dirs=[np.get_include()],
 
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers = [
