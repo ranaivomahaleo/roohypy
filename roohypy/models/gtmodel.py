@@ -20,13 +20,13 @@ import scipy.weave as weave
 
 import gmpy2 as g2
 
-import pyximport
+#import pyximport
 # pyximport.install(
 #     setup_args={
 #         "include_dirs":[np.get_include()],
 #     },
 #     reload_support=True)
-pyximport.install()
+#pyximport.install()
 
 import c_gtmodel
 

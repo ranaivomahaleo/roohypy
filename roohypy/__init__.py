@@ -8,6 +8,10 @@
 
 # Import all classes and functions inside exceptions.py
 # This function is under the namespace import roohypy
+
+import pyximport
+pyximport.install()
+
 from roohypy.exceptions import *
 
 # Namespace roohypy.tools
