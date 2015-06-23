@@ -28,6 +28,9 @@ import gmpy2 as g2
 #     reload_support=True)
 #pyximport.install()
 
+import pyximport
+pyximport.install()
+
 import c_gtmodel
 
 def getListOfAlphaMu(step_parameter_interval):
