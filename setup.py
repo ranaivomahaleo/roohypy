@@ -1,11 +1,12 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from setuptools import setup # Always prefer setuptools over distutils
+#from setuptools import setup # Always prefer setuptools over distutils
 from codecs import open  # To use a consistent encoding
 from os import path
 
-import pyximport; pyximport.install()
+from distutils.core import setup
+from Cython.Build import cythonize
 
 here = path.abspath(path.dirname(__file__))
 
@@ -34,6 +35,7 @@ setup(
     author_email='ranaivo.razakanirina@atety.com',
     license='BSD 3-clause',
     install_requires=['networkx', 'numpy', 'bitshuffle', 'scipy', 'h5py'],
+    ext_modules = cythonize(["*.pyx"]),
 
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers = [
