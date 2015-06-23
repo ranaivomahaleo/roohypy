@@ -1,11 +1,8 @@
-#cython: boundscheck=False
-#cython: wraparound=False
 
 cimport cython
 cimport numpy as cnp
 import gmpy2 as g2
 import numpy as np
-
 
 def cython_row_sum(
         cnp.ndarray[object, ndim=2] zeros,

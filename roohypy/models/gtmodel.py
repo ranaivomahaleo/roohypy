@@ -17,6 +17,7 @@ import roohypy.core as cr
 import roohypy.tools as tl
 import scipy.sparse as sparse
 import scipy.weave as weave
+import multiprocessing as mpg
 
 import gmpy2 as g2
 
@@ -28,8 +29,8 @@ import gmpy2 as g2
 #     reload_support=True)
 #pyximport.install()
 
-import pyximport
-pyximport.install()
+#import pyximport
+#pyximport.install()
 
 import c_gtmodel
 
@@ -323,28 +324,16 @@ def optimizedGTModel6(
     
     """
     
-    #g2.get_context().precision = 100
-    #g2.get_context().round=2
-    
     start_am = pair_am[0]
     end_am = pair_am[1]
-#     print('start_am', start_am)
-#     print('end_am', end_am)
     start_t = pair_t[0]
     end_t = pair_t[1]
     for am in range(0, end_am-start_am+1, 1):
 
         pair_alpha_mu = index_to_alpha_mu[start_am + am]
-#         print(am)
-#         print(pair_alpha_mu)
         
         alpha =  g2.mpfr(pair_alpha_mu[0]) * g2.mpfr('0.001')
         mu = g2.mpfr(pair_alpha_mu[1]) * g2.mpfr('0.001')
-        
-#         print('alpha', alpha)
-#         print('mu', mu)
-#         print('====================')
-#         quit()
         
         for t in range(0, end_t-start_t+1, 1):
 
@@ -383,11 +372,6 @@ def optimizedGTModel6(
             g_next = one_mu_g + sum_g_f_tr
             
             p_next = c_gtmodel.cython_compute_price(zeros_vector2, C_f, g_f, elt_indices)
-            
-#             print('c_next=', c_next)
-#             print('g_next=', g_next)
-#             print('p_next=', p_next)
-#             quit()
             
             cash[:,am,t+1] = c_next.reshape(n)
             goods[:,am,t+1] = g_next.reshape(n)
