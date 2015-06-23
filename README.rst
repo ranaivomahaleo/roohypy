@@ -28,8 +28,12 @@ To install the simulator, use the standard setup.py script to install
 a python package:
 
 ::
-
     python setup.py install
+
+Due to the integration of pyx files, install the package in develop mode
+::
+    python setup.py develop
+(see https://github.com/ranaivomahaleo/roohypy/issues/1 for more explanation about this hot fix).
 
 Simulator
 ---------
