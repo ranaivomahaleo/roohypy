@@ -21,7 +21,7 @@ def cython_row_sum(
         i = elt_indices[m, 0]
         j = elt_indices[m, 1]
         zeros[i,0] = zeros[i,0] + input[i,j]
-    return zeros
+    return zeros 
 
 
 
