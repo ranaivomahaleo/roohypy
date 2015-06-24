@@ -29,8 +29,8 @@ import gmpy2 as g2
 #     reload_support=True)
 #pyximport.install()
 
-#import pyximport
-#pyximport.install()
+import pyximport
+pyximport.install()
 
 import c_gtmodel
 
@@ -328,53 +328,141 @@ def optimizedGTModel6(
     end_am = pair_am[1]
     start_t = pair_t[0]
     end_t = pair_t[1]
-    for am in range(0, end_am-start_am+1, 1):
-
-        pair_alpha_mu = index_to_alpha_mu[start_am + am]
-        
-        alpha =  g2.mpfr(pair_alpha_mu[0]) * g2.mpfr('0.001')
-        mu = g2.mpfr(pair_alpha_mu[1]) * g2.mpfr('0.001')
-        
-        for t in range(0, end_t-start_t+1, 1):
-
-            c = (cash[:,am,t]).reshape((n,1))
-            g = (goods[:,am,t]).reshape((n,1))
-            p = (price[:,am,t]).reshape((n,1))
-                        
-            alpha_c, \
-            mu_g, \
-            one_alpha_c, \
-            one_mu_g = c_gtmodel.cython_four_scalar_vector_multiplications(
-                            alpha, c,
-                            mu, g,
-                            g2.mpfr('1')-alpha, c,
-                            g2.mpfr('1')-mu, g
-            )
-
-            inv_p = g2.mpfr('1') / p
-            temp = c_gtmodel.cython_adjmatrix_times_vector(
-                        n, inv_p, elt_indices)
-            sum_inv_p =  g2.mpfr('1') / temp
-
-            D = np.multiply(alpha_c, sum_inv_p)
-            
-            # elt_indices is a np array with int elements
-            C_f = c_gtmodel.cython_compute_cash_flow(zeros, D, inv_p, elt_indices)
-            C_f_tr = np.transpose(C_f)
-
-            sum_C_f_tr = c_gtmodel.cython_row_sum(zeros_vector, C_f_tr, elt_indices_tr)
-            c_next = one_alpha_c + sum_C_f_tr
-
-            D = np.multiply(mu_g, g2.mpfr('1') / sum_C_f_tr)
-            g_f = c_gtmodel.cython_compute_goods_flow(zeros1, D, C_f_tr, elt_indices_tr)
-            g_f_tr = g_f.transpose()
-            sum_g_f_tr = c_gtmodel.cython_row_sum(zeros_vector1, g_f_tr, elt_indices)
-            g_next = one_mu_g + sum_g_f_tr
-            
-            p_next = c_gtmodel.cython_compute_price(zeros_vector2, C_f, g_f, elt_indices)
-            
-            cash[:,am,t+1] = c_next.reshape(n)
-            goods[:,am,t+1] = g_next.reshape(n)
-            price[:,am,t+1] = p_next.reshape(n)
     
+    #results = mpg.Queue()
+    processes = []
+    pool = mpg.Pool(processes=3)
+    try:
+        for am in range(0, end_am-start_am+1, 1):
+
+            pair_alpha_mu = index_to_alpha_mu[start_am + am]
+            alpha =  g2.mpfr(pair_alpha_mu[0]) * g2.mpfr('0.001')
+            mu = g2.mpfr(pair_alpha_mu[1]) * g2.mpfr('0.001')
+        
+            cash_ini = (cash[:,am,0]).reshape((n,1))
+            goods_ini = (goods[:,am,0]).reshape((n,1))
+            price_ini = (price[:,am,0]).reshape((n,1))
+
+    #         p = mpg.Process(target=epochs_function, 
+    #                     args=(am, alpha, mu, start_t, end_t,
+    #                             cash_ini, goods_ini, price_ini, n,
+    #                             A, csc_A, 
+    #                             elt_indices, elt_indices_tr,
+    #                             zeros, zeros1,
+    #                             zeros_vector, zeros_vector1,
+    #                             zeros_vector2, zeros_vector3,
+    #                             results))
+    #         processes.append(p)
+    #         p.start()
+        
+            r = pool.apply_async(epochs_function,
+                        args=(am, alpha, mu, start_t, end_t,
+                                cash_ini, goods_ini, price_ini, n,
+                                A, csc_A, 
+                                elt_indices, elt_indices_tr,
+                                zeros, zeros1,
+                                zeros_vector, zeros_vector1,
+                                zeros_vector2, zeros_vector3,))
+            processes.append(r)
+    
+        pool.close()
+
+    except KeyboardInterrupt:
+        # Terminate parent process when receivint CTRL+c command
+        pool.terminate()
+    
+    for p in processes:
+        data = p.get()
+        s = cash[:,data[0],:].shape
+        cash[:,data[0],:] = data[1]['cash'].reshape((s[0], s[1]))
+        goods[:,data[0],:] = data[1]['goods'].reshape((s[0], s[1]))
+        price[:,data[0],:] = data[1]['price'].reshape((s[0], s[1]))
+
     return cash, goods, price
+
+
+# def epochs_function(am, alpha, mu, start_t, end_t,
+#         c, g, p, n,
+#         A, csc_A, 
+#         elt_indices, elt_indices_tr,
+#         zeros, zeros1,
+#         zeros_vector, zeros_vector1,
+#         zeros_vector2, zeros_vector3,
+#         results):
+def epochs_function(am, alpha, mu, start_t, end_t,
+        c, g, p, n,
+        A, csc_A, 
+        elt_indices, elt_indices_tr,
+        zeros, zeros1,
+        zeros_vector, zeros_vector1,
+        zeros_vector2, zeros_vector3):
+    """
+    """
+    
+    cash_block = g2.mpfr('0') * np.zeros((n, 1, end_t-start_t+2))
+    goods_block = g2.mpfr('0') * np.zeros((n, 1, end_t-start_t+2))
+    price_block = g2.mpfr('0') * np.zeros((n, 1, end_t-start_t+2))
+    
+    cash_block[:,0,0] = c.reshape(n)
+    goods_block[:,0,0] = g.reshape(n)
+    price_block[:,0,0] = p.reshape(n)
+
+    for t in range(0, end_t-start_t+1, 1):
+
+#         c = (cash[:,am,t]).reshape((n,1))
+#         g = (goods[:,am,t]).reshape((n,1))
+#         p = (price[:,am,t]).reshape((n,1))
+                    
+        alpha_c, \
+        mu_g, \
+        one_alpha_c, \
+        one_mu_g = c_gtmodel.cython_four_scalar_vector_multiplications(
+                        alpha, c,
+                        mu, g,
+                        g2.mpfr('1')-alpha, c,
+                        g2.mpfr('1')-mu, g
+        )
+
+        inv_p = g2.mpfr('1') / p
+        temp = c_gtmodel.cython_adjmatrix_times_vector(
+                    n, inv_p, elt_indices)
+        sum_inv_p =  g2.mpfr('1') / temp
+
+        D = np.multiply(alpha_c, sum_inv_p)
+        
+        C_f = c_gtmodel.cython_compute_cash_flow(zeros, 
+                                        D, inv_p, elt_indices)
+        C_f_tr = np.transpose(C_f)
+
+        sum_C_f_tr = c_gtmodel.cython_row_sum(zeros_vector,
+                                        C_f_tr, elt_indices_tr)
+        c_next = one_alpha_c + sum_C_f_tr
+
+        D = np.multiply(mu_g, g2.mpfr('1') / sum_C_f_tr)
+        g_f = c_gtmodel.cython_compute_goods_flow(zeros1,
+                                        D, C_f_tr, elt_indices_tr)
+        g_f_tr = g_f.transpose()
+        sum_g_f_tr = c_gtmodel.cython_row_sum(zeros_vector1,
+                                            g_f_tr, elt_indices)
+        g_next = one_mu_g + sum_g_f_tr
+        
+        p_next = c_gtmodel.cython_compute_price(zeros_vector2,
+                                            C_f, g_f, elt_indices)
+        
+        c = c_next
+        g = g_next
+        p = p_next
+        
+        cash_block[:,0,t+1] = c_next.reshape(n)
+        goods_block[:,0,t+1] = g_next.reshape(n)
+        price_block[:,0,t+1] = p_next.reshape(n)
+        
+#         cash[:,am,t+1] = c_next.reshape(n)
+#         goods[:,am,t+1] = g_next.reshape(n)
+#         price[:,am,t+1] = p_next.reshape(n)
+    
+#     results.put((am, {'cash':cash_block,
+#                     'goods':goods_block,
+#                     'price':price_block}))
+    return (am, {'cash':cash_block, 'goods':goods_block, 'price':price_block})
+
