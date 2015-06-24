@@ -20,6 +20,7 @@ import scipy.weave as weave
 import multiprocessing as mpg
 
 import gmpy2 as g2
+import signal
 
 #import pyximport
 # pyximport.install(
@@ -33,6 +34,9 @@ import pyximport
 pyximport.install()
 
 import c_gtmodel
+
+def init_worker():
+    signal.signal(signal.SIGINT, signal.SIG_IGN)
 
 def getListOfAlphaMu(step_parameter_interval):
     """alpha and mu are the parameters of GT-Model.
@@ -330,8 +334,9 @@ def optimizedGTModel6(
     end_t = pair_t[1]
     
     #results = mpg.Queue()
+    
     processes = []
-    pool = mpg.Pool(processes=n_processors)
+    pool = mpg.Pool(n_processors, init_worker)
     try:
         for am in range(0, end_am-start_am+1, 1):
 
@@ -366,11 +371,11 @@ def optimizedGTModel6(
             processes.append(r)
     
         pool.close()
-
+        
     except KeyboardInterrupt:
         # Terminate parent process when receivint CTRL+c command
         pool.terminate()
-    
+
     for p in processes:
         data = p.get()
         s = cash[:,data[0],:].shape

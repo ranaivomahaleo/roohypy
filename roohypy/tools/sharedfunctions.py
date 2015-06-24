@@ -267,18 +267,19 @@ def getRandomUniformIC(
         else:
             #If test fails after 10 times, use homogeneous initial conditions
             # for c and g (re-compute p_ic later)
-            c_ic, g_ic, p_ic = getHomogeneousInitialConditions(c_tot/n, g_tot/n, 10, n)
+            c_ic, g_ic, p_ic = getHomogeneousInitialConditions(
+                c_tot/g2.mpfr(n), g_tot/g2.mpfr(n), g2.mpfr('10'), n)
             # print('c_ic and g_ic below a particular limit')
 
     # Compute p_min and p_max and generate U(p_min, p_max)
-    alpha_min = alpha_mu_interval / 1000
-    alpha_max = (1000 - alpha_mu_interval) / 1000
+    alpha_min = alpha_mu_interval / g2.mpfr('1000')
+    alpha_max = (g2.mpfr('1000') - alpha_mu_interval) / g2.mpfr('1000')
     mu_min = alpha_min
     mu_max = alpha_max
     p_min = (alpha_min * c_tot) / (mu_max * g_tot)
     p_max = (alpha_max * c_tot) / (mu_min * g_tot)
         
-    p_ic = np.random.uniform(low=p_min, high=p_max, size=n)
+    p_ic = g2.mpfr('1') * np.random.uniform(low=p_min, high=p_max, size=n)
 
 #     print('c_ic', c_ic)
 #     print('sum_c_ic', np.sum(c_ic))
