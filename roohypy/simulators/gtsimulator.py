@@ -189,7 +189,8 @@ def LaunchGTSimulation(simulation, network,
                 iterate['zeros_vector'], iterate['zeros_vector1'],
                 iterate['zeros_vector2'], iterate['zeros_vector3'],
                 cash, goods, price,
-                iterate['n'])
+                iterate['n'],
+                n_processors=simulation['n_processors'])
             
             # Load in f
             iterate['f'] = hd.loadGTIterationToHdf5File(iterate['f'],

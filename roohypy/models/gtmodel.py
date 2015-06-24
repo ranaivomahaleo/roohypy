@@ -269,7 +269,7 @@ def optimizedGTModel6(
         elt_indices, elt_indices_tr,
         zeros, zeros1, zeros_vector, zeros_vector1, zeros_vector2, zeros_vector3,
         cash, goods, price,
-        n):
+        n, n_processors=1):
     """This function is the optimized version (v6) of the GT-Model dynamics.
     
     The inputs are the cash, goods and price arrays with shape
@@ -331,7 +331,7 @@ def optimizedGTModel6(
     
     #results = mpg.Queue()
     processes = []
-    pool = mpg.Pool(processes=3)
+    pool = mpg.Pool(processes=n_processors)
     try:
         for am in range(0, end_am-start_am+1, 1):
 
