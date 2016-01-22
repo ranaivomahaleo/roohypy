@@ -58,25 +58,21 @@ against commodities.
 Sample Python code
 :::::::::::
 The Python code below simulates a GT-Model with the following 
-simulation parameters:
+simulation configurations (default configuration):
 
-* Number of epochs: 100 iterations
-* With :code:`alpha_mu_interval=200`, each parameters :code:`alpha` 
+* :code:`epochs=100`: 100 iterations
+* :code:`alpha_mu_interval=200`: Each parameters :code:`alpha` 
   and :code:`mu` varies
   from [200, 1000[ with the step interval 200 (200, 400, 600, 800).
   1000 is excluded.
-* :code:`resultfolder` defines where the results will be stored: './results/'
-* The parameters :code:`c0`, :code:`g0` and :code:`p0` are the homogeneous
+* :code:`resultfolder='./results/'`: Defines where the results will be stored: './results/'
+* :code:`c0=300`, :code:`g0=40` and :code:`p0=10`: Homogeneous
   initial conditions of each trader.
-* :code:`alpha_mu_chunk_size` and :code:`epochs_chunk_size` defines the chunk
-  shape of the resulting dataset. The recommended setting is 100 for both
-  values.
-* For better compression, the real values are stored using unsigned integer
-  in 32 bits (:code:`numpy.uint32`).
-  The :code:`integer_sensitivity` defines the number of significant digits
-  after the decimal point that will be stored in the resulting dataset.
-  For instance, with :code:`integer_sensitivity=10000`, the four digits
-  after the decimal point are stored in the resulting dataset.
+* :code:`alpha_mu_chunk_size=16`: dataset chunk size in alpha and mu axis
+  (see figure below) 
+* :code:`epochs_chunk_size=100`: dataset chunk size in epoch axis 
+  (see figure below) defines the chunk
+
   
 The network parameters are:
 
