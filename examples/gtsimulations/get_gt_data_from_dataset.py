@@ -11,7 +11,7 @@ from bitshuffle import h5 # bishuffle is mandatory for data decompression
 import roohypy.tools as tl
 
 # Path of the dataset
-datasetfullpath = './results/N200_p0.2_001_s20_i100/dataset.h5'
+datasetfullpath = './results/N200_p0.2_002_s200_is10000_i100/dataset_0.h5'
 
 # Read the hdf5 dataset
 f = hdf.File(datasetfullpath, 'r')

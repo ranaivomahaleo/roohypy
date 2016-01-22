@@ -18,12 +18,47 @@ import scipy.sparse as sparse
 
 import gmpy2 as g2
 
-def InitGTSimulation(simulation, network,
+
+def GetDefaultGTSimulationConfigs():
+  """This function returns the default GT simulation configuration
+  """
+  # Simulation configurations
+  simulation = {}
+  simulation['epochs'] = 100
+  simulation['alpha_mu_interval'] = 200
+  simulation['resultfolder'] = './results/' # With trailing slash
+  simulation['rand_ic'] = False
+  simulation['alpha_mu_chunk_size'] = 16
+  simulation['epochs_chunk_size'] = 100
+  simulation['integer_sensitivity'] = 10000
+
+  # If True, this parameter defines homogeneous initial condition or not.
+  # Default is True with c0=300, g0=40, p0=10
+  simulation['using_c0_g0'] = True
+  simulation['c0'] = 300
+  simulation['g0'] = 40
+  simulation['p0'] = 10
+
+  # If True, this parameter saves only in hdf5 file some chunk id
+  # Default is False. If True, define saved_chunkids
+  simulation['selectchunk'] = False
+  #simulation['saved_chunkids'] = {1, 2}
+
+  # Define the number of processors on multicore processor
+  simulation['n_processors'] = 1
+  
+  return simulation
+
+
+def InitGTSimulation(network,
+        simulation={},
         attributes={}, simulation_index=0, icf=False, icfile=''):
     """This function inits all necessary temporary variables
     needed for a GT simulation.
     """
     # mp.dps = 50 # Set high decimal precision
+    
+    print(simulation)
 
     
     # Process network data
@@ -159,16 +194,24 @@ def InitGTSimulation(simulation, network,
     return cash, goods, price, iterate
 
 
-def LaunchGTSimulation(simulation, network,
+def LaunchGTSimulation(network,
+        simulation={},
         attributes={}, simulation_index=0, icf=False, icfile=''):
     """This function launches a GT simulation.
     """
+    
+    # Default simulation values
+    # If the simulation dict configuration is empty, use default configs
+    if bool(simulation)==False:
+      simulation = GetDefaultGTSimulationConfigs()
+    
     # Init and launch the GT simulation
-    cash, goods, price, iterate = InitGTSimulation(simulation, network,
+    cash, goods, price, iterate = InitGTSimulation(network,
+                                        simulation=simulation,
                                         attributes=attributes,
                                         simulation_index=simulation_index,
                                         icf=icf, icfile=icfile)
-
+    
     for pair_am in iterate['tuple_am']:
         cash[:,:,0] = iterate['cashini'][:,:,0]
         goods[:,:,0] = iterate['goodsini'][:,:,0]
