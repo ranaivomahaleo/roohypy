@@ -113,21 +113,8 @@ The GT-Model simulation code is:
 
     # Code available at
     # roohypy/examples/gtsimulations/simulate_gt_model.py
-
+    
     import roohypy.simulators as sim
-
-    # Simulation parameters
-    simulation = {}
-    simulation['epochs'] = 100
-    simulation['alpha_mu_interval'] = 200
-    simulation['resultfolder'] = './results/' # With trailing slash
-    simulation['rand_ic'] = False
-    simulation['c0'] = 300
-    simulation['g0'] = 40
-    simulation['p0'] = 10
-    simulation['alpha_mu_chunk_size'] = 16
-    simulation['epochs_chunk_size'] = 100
-    simulation['integer_sensitivity'] = 10000
 
     # Network parameters and
     # set manually some network attributes
@@ -140,9 +127,10 @@ The GT-Model simulation code is:
     attributes['p'] = 0.2
     attributes['algorithm'] = 'ER'
 
-    # Launch a GT simulation corresponding to the above simulation
+    # Launch a GT simulation corresponding to the default simulation configurations, 
     # network and attributes parameters.
-    sim.LaunchGTSimulation(simulation, network, attributes=attributes, simulation_index=0)
+    sim.LaunchGTSimulation(network, attributes=attributes, simulation_index=0)  
+
 
 Structure of the resulting dataset of GT-Model
 :::::::::::::::::::::::::::::::::::
@@ -182,7 +170,7 @@ even not used within the code.
     import roohypy.tools as tl
 
     # Path of the dataset
-    datasetfullpath = './results/N200_p0.2_001_s20_i100/dataset.h5'
+    datasetfullpath = './results/N200_p0.2_002_s200_is10000_i100/dataset_0.h5'
 
     # Read the hdf5 dataset
     f = hdf.File(datasetfullpath, 'r')
@@ -204,20 +192,21 @@ even not used within the code.
 
     print(assets)
 
+
 The above code returns the following results
 (the hdf5 dataset is available at
-:code:`roohypy/examples/gtsimulations/results/N200_p0.2_001_s20_i100`):
+:code:`roohypy/examples/gtsimulations/results/N200_p0.2_002_s200_is10000_i100/dataset_0.h5`):
 
 ::
 
-    [[3000000 3178571 3090723 3200478 3156122 3222049 3203390 3241726 3237767
-      3258931]
-     [3000000 2820206 2928460 2800962 2877071 2783782 2839352 2769273 2811228
-      2757431]
-     [3000000 2669882 2883294 2614275 2794136 2574776 2726787 2546319 2676086
-      2525700]
-     [3000000 2839987 2951648 2836415 2918972 2829145 2895864 2821253 2878839
-      2814014]
-     [3000000 2819879 2947230 2768617 2904739 2739132 2872177 2722643 2847804
-      2714066]]
+    [[ 300.          312.96763101  304.91503735  313.50568624  308.4347281
+       314.17414831  310.98049562  314.85295998  312.83239204  315.48649578]
+     [ 300.          315.30861274  308.27477492  318.15867155  313.75594732
+       320.91645355  317.58452923  323.26142142  320.38308709  325.14130738]
+     [ 300.          301.43608116  296.52577512  302.15469169  294.26647784
+       301.89450917  292.70615126  301.18550113  291.58537403  300.30110894]
+     [ 300.          305.89045415  303.16941947  306.73070302  305.09092535
+       307.77706535  306.3621142   308.78892811  307.28123795  309.68173078]
+     [ 300.          286.12310366  293.90219793  283.52655282  289.61854587
+       281.29112037  286.57039924  279.4292609   284.36747032  277.91597793]]
 
